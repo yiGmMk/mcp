@@ -1,0 +1,13 @@
+{
+  "nav": {
+    "documentation": "Documentation",
+    "blog": "Blog",
+    "community": "Community"
+  },
+  "home": {
+    "title": "Global Technical Community",
+    "description": "The premier platform for Anthropic MCP protocol documentation, developer resources, and community collaboration.",
+    "getStarted": "Get Started",
+    "joinCommunity": "Join Community"
+  }
+} 

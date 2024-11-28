@@ -1,0 +1,13 @@
+{
+  "nav": {
+    "documentation": "ドキュメント",
+    "blog": "ブログ",
+    "community": "コミュニティ"
+  },
+  "home": {
+    "title": "グローバル技術コミュニティ",
+    "description": "Anthropic MCP プロトコルのドキュメント、開発者リソース、コミュニティコラボレーションのためのプレミアプラットフォーム。",
+    "getStarted": "はじめる",
+    "joinCommunity": "コミュニティに参加"
+  }
+} 

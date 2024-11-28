@@ -1,0 +1,13 @@
+{
+  "nav": {
+    "documentation": "文档",
+    "blog": "博客",
+    "community": "社区"
+  },
+  "home": {
+    "title": "全球技术社区",
+    "description": "Anthropic MCP 协议的首选平台，提供技术文档、开发者资源和社区协作。",
+    "getStarted": "开始使用",
+    "joinCommunity": "加入社区"
+  }
+} 
