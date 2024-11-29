@@ -3,6 +3,8 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { locales } from "@/i18n/config";
 import Navbar from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { ThemeProvider } from "next-themes";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -28,9 +30,16 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <Navbar />
-      <main className="min-h-screen">{children}</main>
-    </NextIntlClientProvider>
+    <html lang={locale} suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        <ThemeProvider attribute="class">
+          <NextIntlClientProvider messages={messages} locale={locale}>
+            <Navbar />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+          </NextIntlClientProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
