@@ -73,9 +73,6 @@ export function Mermaid({ chart, className, mermaidKey = 'mermaid' }: MermaidPro
           messageFontSize: 14,
           wrap: false,
           wrapPadding: 10,
-          messageFont: 'inherit',
-          noteFont: 'inherit',
-          actorFont: 'inherit',
         },
       })
 
