@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { HeroSection } from '@/components/home/hero-section';
 import { OverviewSection } from '@/components/home/overview-section';
 import { ProtocolSection } from '@/components/home/protocol-section';
-import { FeaturesSection } from '@/components/home/features-section';
 import { IntegrationSection } from '@/components/home/integration-section';
 import { GlobalSection } from '@/components/home/global-section';
 

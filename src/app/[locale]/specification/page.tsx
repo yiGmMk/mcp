@@ -1,12 +1,125 @@
 import { useTranslations } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
-import { CodeBlock } from '@/components/ui/code-block'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, FileJson, Github, Wrench, MessageSquare, ArrowUpRight } from 'lucide-react'
+import { ArrowLeft, Github, ArrowUpRight } from 'lucide-react'
 import { Link } from '@/i18n/routing'
 import { Mermaid } from '@/components/ui/mermaid'
 
+interface MessageItem {
+  title: string;
+  description: string;
+  features?: string[];
+  codeExample?: {
+    title: string;
+    code: string;
+  };
+}
+
+interface Phase {
+  title: string;
+  description: string;
+  features?: string[];
+  capabilities?: {
+    client: {
+      name: string;
+      description: string;
+    }[];
+    server: {
+      name: string;
+      description: string;
+    }[];
+  };
+  codeExamples?: {
+    title: string;
+    code: string;
+  }[];
+  codeExample?: {
+    title: string;
+    code: string;
+  };
+}
+
+interface PrimitiveItem {
+  primitive: string;
+  control: string;
+  description: string;
+  example: string;
+}
+
+interface Endpoint {
+  title: string;
+  description: string;
+}
+
+interface ServerFeature {
+  title: string;
+  description: string;
+  items: string[];
+}
+
+interface Transport {
+  title: string;
+  description: string;
+  features?: string[];
+  diagram: string;
+  endpoints?: {
+    title: string;
+    items: Endpoint[];
+  };
+  requirements?: string[];
+}
+
+interface Architecture {
+  title: string;
+  description: string;
+  diagram: string;
+  details: {
+    title: string;
+    host: {
+      title: string;
+      description: string;
+      features: string[];
+    };
+    client: {
+      title: string;
+      description: string;
+      features: string[];
+    };
+    server: {
+      title: string;
+      description: string;
+      features: string[];
+    };
+  };
+  messages: {
+    title: string;
+    description: string;
+    items: MessageItem[];
+  };
+  lifecycle: {
+    title: string;
+    description: string;
+    diagram: string;
+    phases: Phase[];
+  };
+  transports: {
+    title: string;
+    description: string;
+    stdio: Transport;
+    sse: Transport;
+    custom: Transport;
+  };
+  serverFeatures: {
+    title: string;
+    description: string;
+    primitives: {
+      headers: string[];
+      items: PrimitiveItem[];
+    };
+    features: ServerFeature[];
+  };
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Specification')
@@ -19,6 +132,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function SpecificationPage() {
   const t = useTranslations('Specification')
+
+  const architecture: Architecture = t.raw('overview.architecture')
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background/95 to-background/90">
@@ -77,10 +192,10 @@ export default function SpecificationPage() {
               <div>
                 <div className="max-w-2xl">
                   <h2 className="text-3xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary/90 to-primary bg-clip-text text-transparent">
-                    {t('overview.architecture.title')}
+                    {architecture.title}
                   </h2>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    {t('overview.architecture.description')}
+                    {architecture.description}
                   </p>
                 </div>
                 <div className="mt-12 relative">
@@ -89,7 +204,7 @@ export default function SpecificationPage() {
                     <Mermaid
                       key="architecture-diagram"
                       mermaidKey="architecture"
-                      chart={t.raw('overview.architecture.diagram')}
+                      chart={architecture.diagram}
                       className="p-8 rounded-3xl border border-primary/10 shadow-xl shadow-primary/5 bg-gradient-to-b from-background/95 to-background"
                     />
                   </div>
@@ -99,11 +214,11 @@ export default function SpecificationPage() {
               {/* 组件详情 */}
               <div>
                 <h2 className="text-3xl font-bold tracking-tight mb-16 text-center bg-gradient-to-r from-primary/90 to-primary bg-clip-text text-transparent">
-                  {t('overview.architecture.details.title')}
+                  {architecture.details.title}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
                   {['host', 'client', 'server'].map((component) => {
-                    const details = t.raw(`overview.architecture.details.${component}`)
+                    const details = architecture.details[component]
                     return (
                       <div key={component} className="group relative">
                         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/5 to-transparent rounded-3xl blur-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -145,13 +260,13 @@ export default function SpecificationPage() {
             {/* 消息类型 */}
             <div>
               <h2 className="text-3xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary/90 to-primary bg-clip-text text-transparent">
-                {t('overview.architecture.messages.title')}
+                {architecture.messages.title}
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed mb-16 max-w-3xl">
-                {t('overview.architecture.messages.description')}
+                {architecture.messages.description}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto">
-                {t.raw('overview.architecture.messages.items').map((message: any) => (
+                {architecture.messages.items.map((message: MessageItem) => (
                   <div key={message.title} className="group relative">
                     <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/5 to-transparent rounded-3xl blur-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="space-y-6">
@@ -204,10 +319,10 @@ export default function SpecificationPage() {
             {/* 生命周期 */}
             <div className="mt-32">
               <h2 className="text-3xl font-bold tracking-tight mb-6 text-center bg-gradient-to-r from-primary/90 to-primary bg-clip-text text-transparent">
-                {t('overview.architecture.lifecycle.title')}
+                {architecture.lifecycle.title}
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed text-center mb-16 max-w-3xl">
-                {t('overview.architecture.lifecycle.description')}
+                {architecture.lifecycle.description}
               </p>
 
               {/* 生命周期图 */}
@@ -217,7 +332,7 @@ export default function SpecificationPage() {
                   <Mermaid
                     key="lifecycle-diagram"
                     mermaidKey="lifecycle"
-                    chart={t.raw('overview.architecture.lifecycle.diagram')}
+                    chart={architecture.lifecycle.diagram}
                     className="p-8 rounded-3xl border border-primary/10 shadow-xl shadow-primary/5 bg-gradient-to-b from-background/95 to-background"
                   />
                 </div>
@@ -225,7 +340,7 @@ export default function SpecificationPage() {
 
               {/* 生命周期阶段 */}
               <div className="space-y-24">
-                {t.raw('overview.architecture.lifecycle.phases').map((phase: any, index: number) => (
+                {architecture.lifecycle.phases.map((phase: Phase) => (
                   <div key={phase.title} className="group">
                     <div className="max-w-4xl mx-auto">
                       <div className="flex items-center gap-6 mb-8">
@@ -336,23 +451,23 @@ export default function SpecificationPage() {
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="mx-auto max-w-4xl text-center">
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-5xl">
-                  {t('overview.architecture.transports.title')}
+                  {architecture.transports.title}
                 </h2>
                 <p className="mt-6 text-lg leading-8 text-muted-foreground">
-                  {t('overview.architecture.transports.description')}
+                  {architecture.transports.description}
                 </p>
               </div>
 
               {/* stdio Transport */}
               <div className="mx-auto mt-16 max-w-5xl">
                 <h3 className="text-2xl font-bold mb-6">
-                  {t('overview.architecture.transports.stdio.title')}
+                  {architecture.transports.stdio.title}
                 </h3>
                 <p className="mb-4 text-muted-foreground">
-                  {t('overview.architecture.transports.stdio.description')}
+                  {architecture.transports.stdio.description}
                 </p>
                 <ul className="list-disc pl-6 mb-8 space-y-2 text-muted-foreground">
-                  {t.raw('overview.architecture.transports.stdio.features').map((feature: string, index: number) => (
+                  {architecture.transports.stdio.features.map((feature: string, index: number) => (
                     <li key={index}>{feature}</li>
                   ))}
                 </ul>
@@ -362,7 +477,7 @@ export default function SpecificationPage() {
                     <Mermaid
                       key="stdio-diagram"
                       mermaidKey="stdio"
-                      chart={t.raw('overview.architecture.transports.stdio.diagram')}
+                      chart={architecture.transports.stdio.diagram}
                       className="p-8 rounded-3xl border border-primary/10 shadow-xl shadow-primary/5 bg-gradient-to-b from-background/95 to-background"
                     />
                   </div>
@@ -372,25 +487,25 @@ export default function SpecificationPage() {
               {/* SSE Transport */}
               <div className="mx-auto mt-16 max-w-5xl">
                 <h3 className="text-2xl font-bold mb-6">
-                  {t('overview.architecture.transports.sse.title')}
+                  {architecture.transports.sse.title}
                 </h3>
                 <p className="mb-4 text-muted-foreground">
-                  {t('overview.architecture.transports.sse.description')}
+                  {architecture.transports.sse.description}
                 </p>
                 <div className="mb-8">
                   <h4 className="font-semibold mb-4">
-                    {t('overview.architecture.transports.sse.endpoints.title')}
+                    {architecture.transports.sse.endpoints.title}
                   </h4>
                   <ul className="list-disc pl-6 space-y-4">
-                    {t.raw('overview.architecture.transports.sse.endpoints.items').map((item: any, index: number) => (
+                    {architecture.transports.sse.endpoints.items.map((endpoint: Endpoint, index: number) => (
                       <li key={index} className="text-muted-foreground">
-                        <span className="font-medium">{item.title}</span> - {item.description}
+                        <span className="font-medium">{endpoint.title}</span> - {endpoint.description}
                       </li>
                     ))}
                   </ul>
                 </div>
                 <ul className="list-disc pl-6 mb-8 space-y-2 text-muted-foreground">
-                  {t.raw('overview.architecture.transports.sse.requirements').map((req: string, index: number) => (
+                  {architecture.transports.sse.requirements.map((req: string, index: number) => (
                     <li key={index}>{req}</li>
                   ))}
                 </ul>
@@ -400,7 +515,7 @@ export default function SpecificationPage() {
                     <Mermaid
                       key="sse-diagram"
                       mermaidKey="sse"
-                      chart={t.raw('overview.architecture.transports.sse.diagram')}
+                      chart={architecture.transports.sse.diagram}
                       className="p-8 rounded-3xl border border-primary/10 shadow-xl shadow-primary/5 bg-gradient-to-b from-background/95 to-background"
                     />
                   </div>
@@ -410,13 +525,13 @@ export default function SpecificationPage() {
               {/* Custom Transport */}
               <div className="mx-auto mt-16 max-w-5xl">
                 <h3 className="text-2xl font-bold mb-6">
-                  {t('overview.architecture.transports.custom.title')}
+                  {architecture.transports.custom.title}
                 </h3>
                 <p className="mb-4 text-muted-foreground">
-                  {t('overview.architecture.transports.custom.description')}
+                  {architecture.transports.custom.description}
                 </p>
                 <ul className="list-disc pl-6 mb-8 space-y-2 text-muted-foreground">
-                  {t.raw('overview.architecture.transports.custom.requirements').map((req: string, index: number) => (
+                  {architecture.transports.custom.requirements.map((req: string, index: number) => (
                     <li key={index}>{req}</li>
                   ))}
                 </ul>
@@ -428,10 +543,10 @@ export default function SpecificationPage() {
             {/* 服务器功能 */}
             <div>
               <h2 className="text-3xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary/90 to-primary bg-clip-text text-transparent">
-                {t('overview.serverFeatures.title')}
+                {architecture.serverFeatures.title}
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed mb-16 max-w-3xl">
-                {t('overview.serverFeatures.description')}
+                {architecture.serverFeatures.description}
               </p>
 
               {/* 原语表格 */}
@@ -440,7 +555,7 @@ export default function SpecificationPage() {
                   <table className="w-full text-sm text-left rtl:text-right">
                     <thead className="text-xs uppercase bg-muted/50">
                       <tr>
-                        {t.raw('overview.serverFeatures.primitives.headers').map((header: string) => (
+                        {architecture.serverFeatures.primitives.headers.map((header: string) => (
                           <th key={header} scope="col" className="px-6 py-3">
                             {header}
                           </th>
@@ -448,7 +563,7 @@ export default function SpecificationPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {t.raw('overview.serverFeatures.primitives.items').map((item: any, index: number) => (
+                      {architecture.serverFeatures.primitives.items.map((item: PrimitiveItem, index: number) => (
                         <tr key={index} className="border-b border-muted/20">
                           <td className="px-6 py-4 font-medium">{item.primitive}</td>
                           <td className="px-6 py-4">{item.control}</td>
@@ -463,7 +578,7 @@ export default function SpecificationPage() {
 
               {/* 功能详情 */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto mb-32">
-                {t.raw('overview.serverFeatures.features').map((feature: any) => (
+                {architecture.serverFeatures.features.map((feature: ServerFeature) => (
                   <div key={feature.title} className="group relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 rounded-lg blur-lg group-hover:blur-xl transition-all" />
                     <div className="relative space-y-6 bg-background/95 p-6 rounded-lg border border-primary/10 shadow-xl shadow-primary/5">

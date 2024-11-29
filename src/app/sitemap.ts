@@ -12,18 +12,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 1,
   }));
 
-  // const gameUrls = games.flatMap((game) =>
-  //   languages.map((lang) => ({
-  //     url:
-  //       lang.code === "en"
-  //         ? `${baseUrl}/game/${game.slug}`
-  //         : `${baseUrl}/${lang.code}/game/${game.slug}`,
-  //     lastModified: new Date(),
-  //     changeFrequency: "weekly" as const,
-  //     priority: 0.8,
-  //   }))
-  // );
-
   // 静态页面 URL
   const staticUrls = [
     ...Object.keys(languages).map((lang) => ({

@@ -91,7 +91,7 @@ export function ProtocolSection() {
             <div className="space-y-8">
               {features.map((feature, index) => (
                 <motion.div
-                  key={feature.title}
+                  key={index}
                   variants={item}
                   className="relative"
                 >

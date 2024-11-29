@@ -61,7 +61,7 @@ export function OverviewSection() {
             >
               {['systems', 'tools', 'environments', 'datasets'].map((key, index) => (
                 <motion.div 
-                  key={key}
+                  key={index}
                   variants={item}
                   whileHover={{ scale: 1.05 }}
                   className="group p-4 rounded-lg bg-background/50 backdrop-blur-sm border border-primary/10 hover:border-primary/20 transition-all duration-300"
@@ -102,7 +102,7 @@ export function OverviewSection() {
               >
                 {['spec', 'desktop', 'servers'].map((key, index) => (
                   <motion.li 
-                    key={key}
+                    key={index}
                     variants={item}
                     whileHover={{ x: 10 }}
                     className="flex items-start gap-4 p-4 rounded-lg hover:bg-primary/5 transition-colors"
