@@ -8,6 +8,7 @@ export const routing = defineRouting({
   pathnames: {
     '/': '/',
     '/docs': '/docs',
+    '/docs/[slug]': '/docs/[slug]',
     '/blog': '/blog',
     '/specification': '/specification',
     '/community': '/community'
@@ -15,4 +16,4 @@ export const routing = defineRouting({
   localePrefix: 'as-needed'
 })
 
-export const {Link, redirect, usePathname, useRouter} = createNavigation(routing) 
+export const {Link, redirect, usePathname, useRouter} = createNavigation(routing)

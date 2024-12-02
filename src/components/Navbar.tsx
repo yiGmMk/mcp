@@ -4,34 +4,64 @@ import {useTranslations} from 'next-intl'
 import {Link} from '@/i18n/routing'
 import LanguageSwitcher from './LanguageSwitcher'
 import ThemeToggle from './ThemeToggle'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { useLocale } from 'next-intl'
 
 export default function Navbar() {
   const t = useTranslations('nav')
+  const pathname = usePathname()
+  const locale = useLocale()
+  
+  // 从路径中移除语言前缀以获取实际路径
+  const path = pathname.replace(`/${locale}`, '')
   
   return (
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
-            <Link href="/" className="flex items-center">
+            <Link href="/" aria-label="Claude MCP" title="Claude MCP" className="flex items-center">
+              <img src="/logo.png" alt="Claude MCP" className="w-10 h-auto mr-1" />
               <span className="text-xl font-bold text-gray-900 dark:text-white">MCP</span>
             </Link>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link 
                 href="/docs"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100"
+                aria-label={t('documentation')}
+                title={t('documentation')}
+                className={cn(
+                  "inline-flex items-center px-1 pt-1 text-sm font-medium",
+                  path.startsWith('/docs')
+                    ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
+                    : "text-gray-900 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-400"
+                )}
               >
                 {t('documentation')}
               </Link>
               <Link 
                 href="/specification"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100"
+                aria-label={t('specification')}
+                title={t('specification')}
+                className={cn(
+                  "inline-flex items-center px-1 pt-1 text-sm font-medium",
+                  path.startsWith('/specification')
+                    ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
+                    : "text-gray-900 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-400"
+                )}
               >
                 {t('specification')}
               </Link>
               <Link
                 href="/blog"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                aria-label={t('blog')}
+                title={t('blog')}
+                className={cn(
+                  "inline-flex items-center px-1 pt-1 text-sm font-medium",
+                  path.startsWith('/blog')
+                    ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
+                    : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                )}
               >
                 {t('blog')}
               </Link>

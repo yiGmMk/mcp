@@ -17,7 +17,6 @@ import { Globe } from "lucide-react"
 const languages = {
   en: 'English',
   zh: '中文',
-  ja: '日本語'
 } as const
 
 type LanguageCode = keyof typeof languages
@@ -30,10 +29,22 @@ export default function LanguageSwitcher() {
   // 从路径中移除语言前缀以获取实际路径
   const path = pathname.replace(`/${currentLocale}`, '') || '/'
   
-  // 将路径转换为合法的路由路径
-  const getTypedPath = (path: string): keyof Pathnames => {
-    return (pathnames[path as keyof typeof pathnames] || '/') as keyof Pathnames
+  // 将路径转换为合法的路由路径并获取参数
+  const getTypedPathAndParams = (path: string): { pathname: keyof Pathnames, params?: Record<string, string> } => {
+    // 检查是否是 /docs/xxx 格式的路径
+    if (path.startsWith('/docs/') && path !== '/docs') {
+      const slug = path.split('/').pop()
+      return {
+        pathname: '/docs/[slug]' as keyof Pathnames,
+        params: { slug: slug! }
+      }
+    }
+    return {
+      pathname: (pathnames[path as keyof typeof pathnames] || '/') as keyof Pathnames,
+      params: undefined
+    }
   }
+
   
   return (
     <DropdownMenu>
@@ -47,8 +58,8 @@ export default function LanguageSwitcher() {
         {Object.entries(languages).map(([code, name]) => (
           <DropdownMenuItem key={code} asChild>
             <Link
-              href={getTypedPath(path)}
               locale={code}
+              href={getTypedPathAndParams(path) as any}
               className={currentLocale === code ? 'font-medium' : ''}
             >
               {name}
@@ -58,4 +69,4 @@ export default function LanguageSwitcher() {
       </DropdownMenuContent>
     </DropdownMenu>
   )
-} 
+}

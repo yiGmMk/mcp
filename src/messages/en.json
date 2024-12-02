@@ -710,5 +710,40 @@
     "failed": "Failed",
     "copied": "Copied",
     "learnMore": "Learn More"
-  }
+  },
+  "Docs": {
+      "meta": {
+          "title": "MCP Documentation",
+          "description": "The premier platform for Claude MCP protocol documentation, developer resources and community collaboration.",
+          "og": {
+            "title": "MCP Documentation", 
+            "description": "The premier platform for Claude MCP protocol documentation, developer resources and community collaboration."
+          },
+          "twitter": {
+            "title": "MCP Documentation",
+            "description": "The premier platform for Claude MCP protocol documentation, developer resources and community collaboration."
+          }
+        },
+      "nav": {
+        "getting_started": "Getting Started",
+        "guides": "Guides",
+        "advanced": "Advanced Topics",
+        "previous": "Previous",
+        "next": "Next",
+        "items": {
+          "introduction": "Introduction",
+          "architecture": "Architecture",
+          "installation": "Installation",
+          "protocol": "Protocol",
+          "quickstart": "Quick Start",
+          "getting_started": "Getting Started",
+          "resources": "Resource Management",
+          "tools": "Tools Usage",
+          "messages": "Message Handling",
+          "security": "Security",
+          "deployment": "Deployment",
+          "configuration": "Configuration"
+        }
+      }
+    }
 }

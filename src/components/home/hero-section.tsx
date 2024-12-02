@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Book } from 'lucide-react';
 
@@ -76,10 +77,12 @@ export function HeroSection() {
               {t('hero.getStarted')}
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button variant="outline" size="lg" className="h-12 px-6 text-base glass-effect hover-card">
-              {t('hero.documentation')}
-              <Book className="ml-2" />
-            </Button>
+            <Link href="/docs">
+              <Button variant="outline" size="lg" className="h-12 px-6 text-base glass-effect hover-card">
+                {t('hero.documentation')}
+                <Book className="ml-2" />
+              </Button>
+            </Link>
           </motion.div>
         </motion.div>
       </motion.div>

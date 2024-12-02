@@ -3,7 +3,21 @@
       "documentation": "文档",
       "blog": "博客",
       "specification": "协议规范",
-      "community": "社区"
+      "community": "社区",
+      "getting_started": "入门指南",
+      "guides": "使用指南",
+      "advanced": "高级主题",
+      "items": {
+        "introduction": "简介",
+        "installation": "安装",
+        "quick_start": "快速开始",
+        "resources": "资源管理",
+        "tools": "工具集成",
+        "messages": "消息格式",
+        "security": "安全性",
+        "deployment": "部署",
+        "configuration": "配置"
+      }
     },
     "home": {
       "title": "全球技术社区",
@@ -13,16 +27,16 @@
     },
     "Index": {
       "meta": {
-        "title": "Model Context Protocol - 模型上下文协议",
-        "description": "一个开放的协议标准，用于在AI模型和开发环境之间建立统一的上下文交互",
+        "title": "Claude MCP - 模型上下文协议",
+        "description": "Claude MCP 是一个开放的协议标准，用于在AI模型和开发环境之间建立统一的上下文交互",
         "keywords": "AI, 协议, 上下文, 开发环境, Claude",
         "og": {
-          "title": "Model Context Protocol - 模型上下文协议",
-          "description": "一个开放的协议标准，用于在AI模型和开发环境之间建立统一的上下文交互"
+          "title": "Claude MCP - 模型上下文协议",
+          "description": "Claude MCP 是一个开放的协议标准，用于在AI模型和开发环境之间建立统一的上下文交互"
         },
         "twitter": {
-          "title": "Model Context Protocol - 模型上下文协议",
-          "description": "一个开放的协议标准，用于在AI模型和开发环境��间建立统一的上下文交互"
+          "title": "Claude MCP - 模型上下文协议",
+          "description": "一个开放的协议标准，用于在AI模型和开发环境间建立统一的上下文交互"
         }
       },
       "hero": {
@@ -583,7 +597,7 @@
             },
             "custom": {
               "title": "自定义传输机制",
-              "description": "客户端和服务器可以实现额外的自定义传输机制以满足其特定需求。协议与传输机制无关，可以在任何支持双向消息交换的通信通道上实现。",
+              "description": "��户端和服务器可以实现额外的自定义传输机制以满足其特定需求。协议与传输机制无关，可以在任何支持双向消息交换的通信通道上实现。",
               "requirements": [
                 "选择支持自定义传输机制的实现者必须确保保留 MCP 定义的 JSON-RPC 消息格式和生命周期要求",
                 "自定义传输机制应该记录其特定的连接建立和消息交换模式，以帮助实现互操作性"
@@ -711,5 +725,40 @@
       "failed": "失败",
       "copied": "已复制",
       "learnMore": "了解更多"
+    },
+    "Docs": {
+      "meta": {
+          "title": "MCP 文档",
+          "description": "Cluade MCP 协议文档、开发者资源和社区协作的首选平台。",
+          "og": {
+            "title": "MCP 文档",
+            "description": "Cluade MCP 协议文档、开发者资源和社区协作的首选平台。"
+          },
+          "twitter": {
+            "title": "MCP 文档",
+            "description": "Cluade MCP 协议文档、开发者资源和社区协作的首选平台。"
+          }
+        },
+      "nav": {
+        "getting_started": "入门指南",
+        "guides": "使用指南",
+        "advanced": "高级主题",
+        "previous": "上一节",
+        "next": "下一节",
+        "items": {
+          "introduction": "简介",
+          "architecture": "架构",
+          "installation": "安装",
+          "protocol": "协议",
+          "quickstart": "快速开始",
+          "getting_started": "入门指南",
+          "resources": "资源管理",
+          "tools": "工具使用",
+          "messages": "消息处理",
+          "security": "安全性",
+          "deployment": "部署",
+          "configuration": "配置"
+        }
+      }
     }
   }

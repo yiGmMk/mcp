@@ -1,5 +1,16 @@
 import { languages } from "@/i18n/config";
 import { MetadataRoute } from "next";
+import { type DocMeta } from "@/lib/docs";
+
+async function fetchDocs(locale: string): Promise<DocMeta[]> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/docs/${locale}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch docs");
+  }
+  return (await response.json()) as DocMeta[];
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.claudemcp.com";
@@ -12,10 +23,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 1,
   }));
 
+  // 生成文档 URL
+  const docsUrls: MetadataRoute.Sitemap = [];
+  for (const lang of Object.keys(languages)) {
+    const docs = await fetchDocs(lang);
+    docs.forEach((doc) => {
+      docsUrls.push({
+        url: lang === "en" ? `${baseUrl}/docs/${doc.slug}` : `${baseUrl}/${lang}/docs/${doc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: "daily" as const,
+        priority: 1,
+      });
+    });
+  }
+
   // 静态页面 URL
   const staticUrls = [
     ...Object.keys(languages).map((lang) => ({
-      url: lang === "en" ? `${baseUrl}/specification` : `${baseUrl}/${lang}/specification`,
+      url:
+        lang === "en"
+          ? `${baseUrl}/specification`
+          : `${baseUrl}/${lang}/specification`,
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 1,
@@ -31,9 +59,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 1,
-    }))
+    })),
   ];
 
-  // 合并所有 URL
-  return [...homeUrls, ...staticUrls];
-} 
+  return [...homeUrls, ...staticUrls, ...docsUrls];
+}

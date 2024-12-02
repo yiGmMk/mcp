@@ -68,7 +68,7 @@ export function Footer() {
                   {navigation.product.map((item) => (
                     <li key={item.name}>
                       <I18nLink
-                        href={item.href}
+                        href={item.href as any}
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {item.name}
@@ -102,7 +102,7 @@ export function Footer() {
                   {navigation.legal.map((item) => (
                     <li key={item.name}>
                       <I18nLink
-                        href={item.href}
+                        href={item.href as any}
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {item.name}

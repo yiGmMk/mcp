@@ -7,12 +7,25 @@ import { Link } from '@/i18n/routing'
 import { Mermaid } from '@/components/ui/mermaid'
 
 
-export async function generateMetadata(): Promise<Metadata> {
+type PageProps = {
+  params: Promise<{ locale: string }>;
+}
+
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations('Specification')
 
   return {
     title: t('meta.title'),
     description: t('meta.description'),
+    openGraph: {
+      title: t('meta.og.title'),
+      description: t('meta.og.description'),
+    },
+    alternates: {
+      canonical: locale === 'en' ? `https://www.claudemcp.com/specification` : `https://www.claudemcp.com/${locale}/specification`,
+    },  
   }
 }
 
