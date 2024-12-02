@@ -1,16 +1,15 @@
 import { languages } from "@/i18n/config";
 import { MetadataRoute } from "next";
-import { type DocMeta } from "@/lib/docs";
 
-async function fetchDocs(locale: string): Promise<DocMeta[]> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL}/api/docs/${locale}`
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch docs");
-  }
-  return (await response.json()) as DocMeta[];
-}
+// async function fetchDocs(locale: string): Promise<DocMeta[]> {
+//   const response = await fetch(
+//     `${process.env.NEXT_PUBLIC_SITE_URL}/api/docs/${locale}`
+//   );
+//   if (!response.ok) {
+//     throw new Error("Failed to fetch docs");
+//   }
+//   return (await response.json()) as DocMeta[];
+// }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.claudemcp.com";
@@ -24,12 +23,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // 生成文档 URL
-  const docsUrls: MetadataRoute.Sitemap = [];
+  const docsUrls: any[] = [];
   for (const lang of Object.keys(languages)) {
-    const docs = await fetchDocs(lang);
+    const docs = ["introduction", "architecture", "protocol", "quickstart"];
     docs.forEach((doc) => {
       docsUrls.push({
-        url: lang === "en" ? `${baseUrl}/docs/${doc.slug}` : `${baseUrl}/${lang}/docs/${doc.slug}`,
+        url: lang === "en" ? `${baseUrl}/docs/${doc}` : `${baseUrl}/${lang}/docs/${doc}`,
         lastModified: new Date(),
         changeFrequency: "daily" as const,
         priority: 1,
