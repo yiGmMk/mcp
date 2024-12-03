@@ -6,9 +6,9 @@ next: architecture
 pubDate: 2024-12-01
 ---
 
-# MCP 简介
+# Claude MCP 简介
 
-[MCP](https://www.claudemcp.com/zh)，即模型上下文协议（Model Context Protocol），是 Anthropic Claude 的一个开源开放协议，旨在建立 AI 模型和开发环境之间的统一上下文交互，通过提供标准化的上下文信息访问，使 AI 模型能够更好地理解和处理代码。就像给它们之间搭建了一座桥梁，使得开发者可以通过一套标准将 AI 应用和数据源连接起来 。
+Claude [MCP](https://www.claudemcp.com/zh)，即模型上下文协议（Model Context Protocol），是 Anthropic Claude 的一个开源开放协议，旨在建立 AI 模型和开发环境之间的统一上下文交互，通过提供标准化的上下文信息访问，使 AI 模型能够更好地理解和处理代码。就像给它们之间搭建了一座桥梁，使得开发者可以通过一套标准将 AI 应用和数据源连接起来 。
 
 [![Claude MCP 架构图](/images/claude-mcp.png "Claude MCP 架构图")](https://www.claudemcp.com/zh)
 

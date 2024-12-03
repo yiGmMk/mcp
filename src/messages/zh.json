@@ -741,6 +741,7 @@
         },
       "nav": {
         "getting_started": "入门指南",
+        "write_server": "MCP 服务器",
         "guides": "使用指南",
         "advanced": "高级主题",
         "previous": "上一节",
@@ -752,6 +753,7 @@
           "protocol": "协议",
           "quickstart": "快速开始",
           "getting_started": "入门指南",
+          "write-ts-server": "MCP 服务器",
           "resources": "资源管理",
           "tools": "工具使用",
           "messages": "消息处理",

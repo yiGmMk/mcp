@@ -3,6 +3,7 @@ title: Quick Start
 description: How to quickly get started with Claude MCP (Model Context Protocol)
 section: getting_started
 prev: protocol
+next: write-ts-server
 pubDate: 2024-12-02
 ---
 
@@ -217,3 +218,150 @@ Here you may still have some questions about the MCP server, we didn't write any
 ![Built-in MCP Server List](/images/claude-builtin-servers.png)
 
 We can see that it includes a SQLite MCP server. By providing database interaction and intelligent business capabilities through SQLite, this server supports running SQL queries, analyzing business data, etc., so we can configure and use it directly. If we have our own business needs, we can also refer to these built-in implementations to customize an MCP server.
+
+## Accessing the File System
+
+Similarly, we can add a file system MCP server to allow Claude Desktop to manage our local file system. We can directly use the `filesystem` MCP server.
+
+The `filesystem` MCP server implements the Model Context Protocol (MCP) for file system operations:
+
+- Read/write files
+- Create/list/delete directories
+- Move files/directories
+- Search files
+- Get file metadata
+
+This server supports the following Tools:
+
+- `read_file`:
+
+  - Read the complete contents of a file
+  - Input: `path`
+  - Reads the complete file content using UTF-8 encoding
+
+- `read_multiple_files`:
+
+  - Read multiple files simultaneously
+  - Input: `paths`
+  - Reading failures won't stop the entire operation
+
+- `write_file`:
+
+  - Create new file or overwrite existing
+  - Input:
+    - `path`: file location
+    - `content`: file content
+
+- `create_directory`:
+
+  - Create new directory or ensure it exists
+  - Input: `path`
+  - Creates parent directories if needed
+  - Silently succeeds if directory exists
+
+- `list_directory`:
+
+  - List directories or files with [file] or [dir] prefix
+  - Input: `path`
+
+- `move_file`:
+
+  - Move or rename files and directories
+  - Input:
+    - `source`
+    - `destination`
+  - Fails if destination exists
+
+- `search_files`:
+
+  - Recursively search for files/directories
+  - Input:
+    - `path`: starting directory
+    - `pattern`: search pattern
+  - Returns full paths of matches
+
+- `get_file_info`:
+
+  - Get detailed file/directory metadata
+  - Input: `path`
+  - Returns:
+    - File size
+    - Creation time
+    - Modification time
+    - Access time
+    - Type (file/directory)
+    - Permissions
+
+- `list_allowed_directories`:
+
+  - List all directories the server is allowed to access
+  - No input required
+  - Returns:
+    - Directories this server can read/write
+
+Similarly, if you want to use this MCP server in Claude Desktop, you just need to configure the file path properly. For example, let's use the desktop path here:
+
+```bash
+code ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+Then add the following configuration:
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/username/Desktop",
+        "/path/to/other/allowed/dir"
+      ]
+    }
+  }
+}
+```
+
+Replace the path parameters with your actual path, for example, the complete configuration now is:
+
+```json
+{
+  "mcpServers": {
+    "sqlite": {
+      "command": "uvx",
+      "args": ["mcp-server-sqlite", "--db-path", "/Users/cnych/test.db"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/cnych/src"
+      ]
+    }
+  }
+}
+```
+
+Here we specified the `/Users/cnych/src` directory, then save the configuration file and restart the Claude Desktop application, we can now see a `15` button in the lower right corner of the input box:
+
+![Claude Desktop's File System MCP Server](/images/claude-filesytem-mcp.png)
+
+Clicking it will display the available MCP Tools list, as shown in the following figure:
+
+![Claude Desktop's File System MCP Tools](/images/claude-filesytem-tools.png)
+
+We can see that we can read files, create files, list directories, move files, search files, etc.
+
+We send the prompt `Can you list the contents of my src directory?` and Claude Desktop will list all the files and directories under the specified directory, as shown in the following figure, of course, the process also requires authorization.
+
+![Claude Desktop Listing File System Directory](/images/claude-filesytem-list-tools.png)
+
+Let it help us write a markdown usage guide and save it to the `markdown-usage.md` file `Write a complete guide to markdown and save it to markdown-usage.md file`.
+
+![Claude Desktop Writing to File System](/images/claude-filesytem-write.png)
+
+After authorization, we can see that Claude Desktop will automatically write the file to the specified path on our local machine, as shown in the following figure:
+
+![Claude Desktop Writing to File System Success](/images/claude-filesytem-write-result.png)

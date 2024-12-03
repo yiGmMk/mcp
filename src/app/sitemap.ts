@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 生成文档 URL
   const docsUrls: any[] = [];
   for (const lang of Object.keys(languages)) {
-    const docs = ["introduction", "architecture", "protocol", "quickstart"];
+    const docs = ["introduction", "architecture", "protocol", "quickstart", "write-ts-server"];
     docs.forEach((doc) => {
       docsUrls.push({
         url: lang === "en" ? `${baseUrl}/docs/${doc}` : `${baseUrl}/${lang}/docs/${doc}`,

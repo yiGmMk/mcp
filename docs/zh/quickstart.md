@@ -3,6 +3,7 @@ title: 快速入门
 description: 如何快速上手使用 Claude MCP（Model Context Protocol）
 section: getting_started
 prev: protocol
+next: write-ts-server
 pubDate: 2024-12-02
 ---
 
@@ -216,3 +217,149 @@ MCP 与 Claude Desktop 交互的流程如下所示：
 ![内置的 MCP 服务器列表](/images/claude-builtin-servers.png)
 
 可以看到其中就包含一个 SQLite 的 MCP 服务器。通过 SQLite 提供数据库交互和智能业务能力，该服务器支持运行 SQL 查询、分析业务数据等，所以我们直接配置即可使用了。如果我们有自己的业务需求，也可以参考这些内置的实现自定义一个 MCP 服务器即可。
+
+## 访问文件系统
+
+同样的方式我们可以来添加一个访问文件系统的 MCP 服务器，这样我们就可以让 Claude Desktop 管理我们本地的文件系统了，我们可以直接使用 `filesystem` 这个 MCP 服务器。
+
+`filesystem` 这个 MCP 服务器为文件系统操作实现了模型上下文协议 (MCP)：
+
+- 读/写文件
+- 创建/列出/删除目录
+- 移动文件/目录
+- 搜索文件
+- 获取文件元数据
+
+这个服务器支持的 Tools 列表如下：
+
+- `read_file`：
+
+  - 阅读文件的完整内容
+  - 输入：`path`
+  - 使用 UTF-8 编码读取完整的文件内容
+
+- `read_multiple_files`：
+
+  - 同时阅读多个文件
+  - 输入：`paths`
+  - 读取失败不会停止整个操作
+
+- `write_file`：
+
+  - 创建新文件或覆盖现有
+  - 输入：
+    - `path`：文件位置
+    - `content`：文件内容
+
+- `create_directory`：
+
+  - 创建新目录或确保其存在
+  - 输入：`path`
+  - 如果需要，创建父目录
+  - 如果存在目录，就会默默成功
+
+- `list_directory`：
+
+  - 列表目录目录中的目录或[file]或[dir]前缀
+  - 输入：`path`
+
+- `move_file`：
+
+  - 移动或重命名文件和目录
+  - 输入：
+    - `source`
+    - `destination`
+  - 如果存在，则会失败
+
+- `search_files`：
+
+  - 递归搜索文件/目录
+  - 输入：
+    - `path`：起始目录
+    - `pattern`：搜索模式
+  - 返回比赛的完整路径
+
+- `get_file_info`：
+
+  - 获取详细的文件/目录元数据
+  - 输入：`path`
+  - 返回：
+    - 文件大小
+    - 创建时间
+    - 修改时间
+    - 访问时间
+    - 类型（文件/目录）
+    - 权限
+
+- `list_allowed_directories`：
+  - 列出允许服务器访问的所有目录
+  - 无需输入
+  - 返回：
+    - 该服务器可以读取/写入的目录
+
+同样如果你要在 Claude Desktop 中使用这个 MCP 服务器，只需要配置好文件路径即可，比如我们这里使用桌面路径：
+
+```bash
+code ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+然后添加以下配置：
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/username/Desktop",
+        "/path/to/other/allowed/dir"
+      ]
+    }
+  }
+}
+```
+
+将上面的路径参数替换为你的实际路径即可，比如我们这里现在的完整配置为：
+
+```json
+{
+  "mcpServers": {
+    "sqlite": {
+      "command": "uvx",
+      "args": ["mcp-server-sqlite", "--db-path", "/Users/cnych/test.db"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/cnych/src"
+      ]
+    }
+  }
+}
+```
+
+这里我们指定的是 `/Users/cnych/src` 目录，然后保存配置文件并重启 Claude Desktop 应用即可，我们在输入框右下角可以看到现在变成了一个 `15` 的按钮：
+
+![Claude Desktop 的文件系统 MCP 服务器](/images/claude-filesytem-mcp.png)
+
+点击后可以看到可用的 MCP Tools 列表，如下图所示：
+
+![Claude Desktop 的文件系统 MCP Tools](/images/claude-filesytem-tools.png)
+
+可以看到我们这里可以读取文件，创建文件，列出目录，移动文件，搜索文件等。
+
+我们发送提示词 `Can you list the contents of my src directory?` 后，Claude Desktop 就会列出我们指定目录下的所有文件和目录，如下图所示，当然过程也需要我们授权。
+
+![Claude Desktop 列出文件系统目录](/images/claude-filesytem-list-tools.png)
+
+让其帮我们写一个 markdown 的使用指南，并保存到 `markdown-usage.md` 文件中 `Write a complete guide to markdown and save it to markdown-usage.md file`。
+
+![Claude Desktop 写入文件系统](/images/claude-filesytem-write.png)
+
+经过授权后，我们就可以看到 Claude Desktop 就会自动将文件写入到我们本地指定路径了，如下图所示：
+
+![Claude Desktop 写入文件系统成功](/images/claude-filesytem-write-result.png)

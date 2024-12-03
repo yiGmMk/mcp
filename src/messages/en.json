@@ -726,6 +726,7 @@
         },
       "nav": {
         "getting_started": "Getting Started",
+        "write_server": "MCP Server",
         "guides": "Guides",
         "advanced": "Advanced Topics",
         "previous": "Previous",
@@ -737,6 +738,7 @@
           "protocol": "Protocol",
           "quickstart": "Quick Start",
           "getting_started": "Getting Started",
+          "write-ts-server": "MCP Server",
           "resources": "Resource Management",
           "tools": "Tools Usage",
           "messages": "Message Handling",
