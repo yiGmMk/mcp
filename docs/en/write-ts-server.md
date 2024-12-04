@@ -1,5 +1,5 @@
 ---
-title: Write a TypeScript MCP Server
+title: Write a MCP Server(TypeScript)
 description: How to write your first TypeScript MCP server
 section: write_server
 prev: quickstart
@@ -583,3 +583,462 @@ In addition to the `stdio` transport, MCP also supports the Server-Sent Events (
 - Only need server-to-client streaming
 - Use restricted networks
 - Implement simple updates
+
+## Implement a Weather MCP Server
+
+After analyzing the implementation of the MCP server above, we can now write code according to our requirements. Our requirement is to provide a weather query service, where we can expose weather data as resources and provide a weather query tool.
+
+First, let's define the types for our weather resources as shown in the code below:
+
+```typescript
+// src/types/weather.ts
+export interface OpenWeatherResponse {
+  main: {
+    temp: number;
+    humidity: number;
+  };
+  weather: Array<{
+    description: string;
+  }>;
+  wind: {
+    speed: number;
+  };
+  dt_txt?: string;
+}
+
+export interface WeatherData {
+  temperature: number;
+  conditions: string;
+  humidity: number;
+  wind_speed: number;
+  timestamp: string;
+}
+
+export interface ForecastDay {
+  date: string;
+  temperature: number;
+  conditions: string;
+}
+
+export interface GetForecastArgs {
+  city: string;
+  days?: number;
+}
+
+// Type guard function to check GetForecastArgs type
+export function isValidForecastArgs(args: any): args is GetForecastArgs {
+  return (
+    typeof args === "object" &&
+    args !== null &&
+    "city" in args &&
+    typeof args.city === "string" &&
+    (args.days === undefined || typeof args.days === "number")
+  );
+}
+```
+
+The type definition here is mainly based on the response data type of the OpenWeather API, so we can easily use these types.
+
+Then, write the following basic code to replace the code in `src/index.ts` of the template:
+
+```typescript
+// src/index.ts
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
+  ListToolsRequestSchema,
+  CallToolRequestSchema,
+  ErrorCode,
+  McpError,
+} from "@modelcontextprotocol/sdk/types.js";
+import axios from "axios";
+import dotenv from "dotenv";
+import {
+  WeatherData,
+  ForecastDay,
+  OpenWeatherResponse,
+  isValidForecastArgs,
+} from "./types.js";
+
+dotenv.config();
+
+const API_KEY = process.env.OPENWEATHER_API_KEY;
+if (!API_KEY) {
+  throw new Error("OPENWEATHER_API_KEY environment variable is required");
+}
+
+const API_CONFIG = {
+  BASE_URL: "http://api.openweathermap.org/data/2.5",
+  DEFAULT_CITY: "San Francisco",
+  ENDPOINTS: {
+    CURRENT: "weather",
+    FORECAST: "forecast",
+  },
+} as const;
+
+class WeatherServer {
+  private server: Server;
+  private axiosInstance;
+
+  constructor() {
+    this.server = new Server(
+      {
+        name: "weather-server",
+        version: "0.1.0",
+      },
+      {
+        capabilities: {
+          resources: {},
+          tools: {},
+        },
+      }
+    );
+
+    // Configure axios instance
+    this.axiosInstance = axios.create({
+      baseURL: API_CONFIG.BASE_URL,
+      params: {
+        appid: API_KEY,
+        units: "metric",
+      },
+    });
+
+    this.setupHandlers();
+    this.setupErrorHandling();
+  }
+
+  private setupErrorHandling(): void {
+    this.server.onerror = (error) => {
+      console.error("[MCP Error]", error);
+    };
+
+    process.on("SIGINT", async () => {
+      await this.server.close();
+      process.exit(0);
+    });
+  }
+
+  private setupHandlers(): void {
+    this.setupResourceHandlers();
+    this.setupToolHandlers();
+  }
+
+  private setupResourceHandlers(): void {
+    // TODO: Implement resource handlers
+  }
+
+  private setupToolHandlers(): void {
+    // TODO: Implement tool handlers
+  }
+
+  async run(): Promise<void> {
+    const transport = new StdioServerTransport();
+    await this.server.connect(transport);
+
+    console.error("Weather MCP server running on stdio");
+  }
+}
+
+const server = new WeatherServer();
+server.run().catch(console.error);
+```
+
+Here, we encapsulated the code a bit on the template by defining it as a class, mainly doing the following:
+
+- Defined the types for weather resources
+- Initialized an MCP server instance
+- Registered resource and tool handlers
+- Started the server
+
+Where the resource and tool handlers are marked with `TODO`, and we can implement these handlers next.
+
+### Implement Resource Handlers
+
+In the `setupResourceHandlers` method, we will implement the resource handlers, first add a resource listing handler, then add a resource reading handler, as shown in the following code:
+
+```typescript
+private setupResourceHandlers(): void {
+  this.server.setRequestHandler(
+    ListResourcesRequestSchema,
+    async () => ({
+      resources: [{
+        uri: `weather://${API_CONFIG.DEFAULT_CITY}/current`,
+        name: `Current weather in ${API_CONFIG.DEFAULT_CITY}`,
+        mimeType: "application/json",
+        description: "Real-time weather data including temperature, conditions, humidity, and wind speed"
+      }]
+    })
+  );
+
+  this.server.setRequestHandler(
+    ReadResourceRequestSchema,
+    async (request) => {
+      const city = API_CONFIG.DEFAULT_CITY;
+      if (request.params.uri !== `weather://${city}/current`) {
+        throw new McpError(
+          ErrorCode.InvalidRequest,
+          `Unknown resource: ${request.params.uri}`
+        );
+      }
+
+      try {
+        const response = await this.axiosInstance.get<OpenWeatherResponse>(
+          API_CONFIG.ENDPOINTS.CURRENT,
+          {
+            params: { q: city }
+          }
+        );
+
+        const weatherData: WeatherData = {
+          temperature: response.data.main.temp,
+          conditions: response.data.weather[0].description,
+          humidity: response.data.main.humidity,
+          wind_speed: response.data.wind.speed,
+          timestamp: new Date().toISOString()
+        };
+
+        return {
+          contents: [{
+            uri: request.params.uri,
+            mimeType: "application/json",
+            text: JSON.stringify(weatherData, null, 2)
+          }]
+        };
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          throw new McpError(
+            ErrorCode.InternalError,
+            `Weather API error: ${error.response?.data.message ?? error.message}`
+          );
+        }
+        throw error;
+      }
+    }
+  );
+}
+```
+
+The implementation of the resource listing handler is very simple, here we define the `weather` protocol ourselves, and the data type is JSON format. When getting the resource, we first request the current weather data from the OpenWeather API using `axios`, then convert it to the `WeatherData` type and return it.
+
+### Implement Tool Handlers
+
+After implementing the resource handlers, we can implement the tool handlers. The tool handlers are mainly used to implement some tool functions, here we implement a tool to query the weather forecast for the future, as shown in the following code:
+
+```typescript
+private setupToolHandlers(): void {
+  this.server.setRequestHandler(
+    ListToolsRequestSchema,
+    async () => ({
+      tools: [{
+        name: "get_forecast",
+        description: "Get weather forecast for a city",
+        inputSchema: {
+          type: "object",
+          properties: {
+            city: {
+              type: "string",
+              description: "City name"
+            },
+            days: {
+              type: "number",
+              description: "Number of days (1-5)",
+              minimum: 1,
+              maximum: 5
+            }
+          },
+          required: ["city"]
+        }
+      }]
+    })
+  );
+
+  this.server.setRequestHandler(
+    CallToolRequestSchema,
+    async (request) => {
+      if (request.params.name !== "get_forecast") {
+        throw new McpError(
+          ErrorCode.MethodNotFound,
+          `Unknown tool: ${request.params.name}`
+        );
+      }
+
+      if (!isValidForecastArgs(request.params.arguments)) {
+        throw new McpError(
+          ErrorCode.InvalidParams,
+          "Invalid forecast arguments"
+        );
+      }
+
+      const city = request.params.arguments.city;
+      const days = Math.min(request.params.arguments.days || 3, 5);
+
+      try {
+        const response = await this.axiosInstance.get<{
+          list: OpenWeatherResponse[]
+        }>(API_CONFIG.ENDPOINTS.FORECAST, {
+          params: {
+            q: city,
+            cnt: days * 8 // API returns data with 3-hour intervals
+          }
+        });
+
+        const forecasts: ForecastDay[] = [];
+        for (let i = 0; i < response.data.list.length; i += 8) {
+          const dayData = response.data.list[i];
+          forecasts.push({
+            date: dayData.dt_txt?.split(' ')[0] ?? new Date().toISOString().split('T')[0],
+            temperature: dayData.main.temp,
+            conditions: dayData.weather[0].description
+          });
+        }
+
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(forecasts, null, 2)
+          }]
+        };
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          return {
+            content: [{
+              type: "text",
+              text: `Weather API error: ${error.response?.data.message ?? error.message}`
+            }],
+            isError: true,
+          }
+        }
+        throw error;
+      }
+    }
+  );
+}
+```
+
+Similarly, we need to implement the tool listing handler first, then implement the tool calling handler. Here we only defined a tool named `get_forecast`, which is used to get the weather forecast for a specified city, and it needs to receive two parameters `city` and `days`, where `city` is the city name, and `days` is the number of days to query, the default is 3 days, of course, the data is still obtained through the OpenWeather API request.
+
+In fact, the resources we defined above can be directly obtained through tools, we can add a tool to get the current weather, because the data is obtained through the OpenWeather API request, so it is not necessary to define resources, but here we define resources for demonstration purposes.
+
+### Test
+
+We have implemented a simple weather MCP service, and now we can test it.
+
+First, we need to build the project:
+
+```bash
+npm run build
+```
+
+Then, we need to update the configuration of Claude Desktop:
+
+```bash
+code ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+Add our weather service to the configuration, as shown below:
+
+```json
+{
+  "mcpServers": {
+    //...... other server configurations
+    "weather": {
+      "command": "node",
+      "args": ["/Users/cnych/src/weather-server/build/index.js"],
+      "env": {
+        "OPENWEATHER_API_KEY": "your_openweather_api_key"
+      }
+    }
+  }
+}
+```
+
+Where `args` is the path to the built file, and `env` is the OpenWeather API key we need to configure. After configuring, restart Claude Desktop.
+
+### Test
+
+Next, we can test it, click the number button on the bottom right of the Claude Desktop input box, and it will list the `get_forecast` tool we defined.
+
+![Claude Weather Tools](/images/claude-weather-tools.png)
+
+Next, we can test it, for example, we ask Claude for a 5-day weather forecast:
+
+```bash
+Can you get me a 5-day forecast for Beijing and tell me if I should pack an umbrella?
+```
+
+![Claude Weather Current](/images/claude-weather-forecast.png)
+
+We can see that it calls the `get_forecast` tool (requires authorization) and displays the result.
+
+### Debug
+
+If we encounter problems during testing, we can debug through some methods, for example, view the detailed logs of MCP:
+
+```bash
+# View logs in real-time
+tail -n 20 -f ~/Library/Logs/Claude/mcp*.log
+```
+
+The logs will capture server connection events, configuration issues, runtime errors, message exchanges, and other information.
+
+In addition to logs, we can also debug through `Chrome DevTools`, access the developer tools of Chrome in Claude Desktop to view client errors. You can add the following configuration to the file `~/Library/Application\ Support/Claude/developer_settings.json` to enable DevTools:
+
+```json
+{
+  "allowDevTools": true
+}
+```
+
+Then, use the shortcut `Command+Option+Shift+i` to open DevTools, just like debugging in Chrome.
+
+![Claude DevTools](/images/claude-devtools.png)
+
+In addition to the above conventional debugging methods, Claude MCP also provides an `Inspector` tool, **MCP Inspector** is an interactive developer tool for testing and debugging MCP servers.
+
+You can directly use it through `npx` command without installation:
+
+```bash
+npx @modelcontextprotocol/inspector <command>
+# or
+npx @modelcontextprotocol/inspector <command> <arg1> <arg2>
+```
+
+If the server package comes from NPM, you can start it using the following method:
+
+```bash
+npx -y @modelcontextprotocol/inspector npx <package-name> <args>
+# For example
+npx -y @modelcontextprotocol/inspector npx server-postgres postgres://127.0.0.1/testdb
+```
+
+If the server package is built locally, you can start it using the following method:
+
+```bash
+npx @modelcontextprotocol/inspector node path/to/server/index.js args...
+```
+
+For example, for the weather service we built above, we can start it using the following method:
+
+```bash
+npx @modelcontextprotocol/inspector node /Users/cnych/src/weather-server/build/index.js
+```
+
+After the `Inspector` tool starts, it will start a Web page on `localhost:5173`, and we can test and debug our weather service on it.
+
+![MCP Inspector](/images/claude-inspector-ui.png)
+
+Here, we need to click the `Environment Variables` button on the right, then add the `OPENWEATHER_API_KEY` environment variable, the value is the OpenWeather API key we applied for, then click the `Connect` button to connect to the weather service.
+
+After connecting successfully, we can see the resources and tools of the weather service on the right main window, and we can test and debug them, click the `List Resources` button to list the resources of the weather service, click the listed resources to read and display the resource contents.
+
+![MCP Inspector Resources](/images/claude-inspector-resources.png)
+
+Similarly, we can test Tools, click the `List Tools` button to list the tools of the weather service, then click a specific tool, input the parameters, and click the `Run Tool` button to call the tool and display the result.
+
+![MCP Inspector Tools](/images/claude-inspector-tools.png)
+
+Of course, besides Resources and Tools, we can also test Prompts and Sampling.
+
+We have implemented a simple weather MCP service.

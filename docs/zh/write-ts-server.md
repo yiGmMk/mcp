@@ -1,12 +1,12 @@
 ---
-title: 编写 TypeScript MCP 服务器
+title: 编写 MCP 服务器（TypeScript）
 description: 如何编写我们的第一个 TypeScript MCP 服务器
 section: write_server
 prev: quickstart
 pubDate: 2024-12-03
 ---
 
-# 编写第一个 TypeScript MCP 服务器
+# 编写一个 TypeScript MCP 服务器
 
 在前面我们已经通过 [快速入门](./quickstart) 了解了如何使用 MCP 协议，但是我们都是直接使用的 Claude Desktop 官方内置支持的 MCP 服务器，那么如果我们要自己编写一个 MCP 服务器，该如何实现呢？
 
@@ -583,3 +583,462 @@ main().catch((error) => {
 - 只需要服务器到客户端的流式传输
 - 使用受限网络
 - 实施简单的更新
+
+## 编写代码
+
+上面我们分析了 MCP 服务器的实现，接下来我们就可以根据我们的需求来编写代码了。我们的需求是提供一个天气查询服务，这里我们就可以将天气数据作为资源，然后暴露了一个查询天气的工具即可。
+
+首先我们定义下天气资源的类型，代码如下所示：
+
+```typescript
+// src/types/weather.ts
+export interface OpenWeatherResponse {
+  main: {
+    temp: number;
+    humidity: number;
+  };
+  weather: Array<{
+    description: string;
+  }>;
+  wind: {
+    speed: number;
+  };
+  dt_txt?: string;
+}
+
+export interface WeatherData {
+  temperature: number;
+  conditions: string;
+  humidity: number;
+  wind_speed: number;
+  timestamp: string;
+}
+
+export interface ForecastDay {
+  date: string;
+  temperature: number;
+  conditions: string;
+}
+
+export interface GetForecastArgs {
+  city: string;
+  days?: number;
+}
+
+// 类型保护函数，用于检查 GetForecastArgs 类型
+export function isValidForecastArgs(args: any): args is GetForecastArgs {
+  return (
+    typeof args === "object" &&
+    args !== null &&
+    "city" in args &&
+    typeof args.city === "string" &&
+    (args.days === undefined || typeof args.days === "number")
+  );
+}
+```
+
+这里的类型定义主要是根据 OpenWeather API 的响应数据类型来定义的，这样我们就可以方便地使用这些类型了。
+
+然后编写下面的基础代码，替换模板 `src/index.ts` 中的代码：
+
+```typescript
+// src/index.ts
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
+  ListToolsRequestSchema,
+  CallToolRequestSchema,
+  ErrorCode,
+  McpError,
+} from "@modelcontextprotocol/sdk/types.js";
+import axios from "axios";
+import dotenv from "dotenv";
+import {
+  WeatherData,
+  ForecastDay,
+  OpenWeatherResponse,
+  isValidForecastArgs,
+} from "./types.js";
+
+dotenv.config();
+
+const API_KEY = process.env.OPENWEATHER_API_KEY;
+if (!API_KEY) {
+  throw new Error("OPENWEATHER_API_KEY environment variable is required");
+}
+
+const API_CONFIG = {
+  BASE_URL: "http://api.openweathermap.org/data/2.5",
+  DEFAULT_CITY: "San Francisco",
+  ENDPOINTS: {
+    CURRENT: "weather",
+    FORECAST: "forecast",
+  },
+} as const;
+
+class WeatherServer {
+  private server: Server;
+  private axiosInstance;
+
+  constructor() {
+    this.server = new Server(
+      {
+        name: "weather-server",
+        version: "0.1.0",
+      },
+      {
+        capabilities: {
+          resources: {},
+          tools: {},
+        },
+      }
+    );
+
+    // 配置 axios 实例
+    this.axiosInstance = axios.create({
+      baseURL: API_CONFIG.BASE_URL,
+      params: {
+        appid: API_KEY,
+        units: "metric",
+      },
+    });
+
+    this.setupHandlers();
+    this.setupErrorHandling();
+  }
+
+  private setupErrorHandling(): void {
+    this.server.onerror = (error) => {
+      console.error("[MCP Error]", error);
+    };
+
+    process.on("SIGINT", async () => {
+      await this.server.close();
+      process.exit(0);
+    });
+  }
+
+  private setupHandlers(): void {
+    this.setupResourceHandlers();
+    this.setupToolHandlers();
+  }
+
+  private setupResourceHandlers(): void {
+    // TODO: 实现资源处理器
+  }
+
+  private setupToolHandlers(): void {
+    // TODO: 实现工具处理器
+  }
+
+  async run(): Promise<void> {
+    const transport = new StdioServerTransport();
+    await this.server.connect(transport);
+
+    console.error("Weather MCP server running on stdio");
+  }
+}
+
+const server = new WeatherServer();
+server.run().catch(console.error);
+```
+
+这里代码我们在模板的基础上做了一点小小的封装，通过类的方式来定义，主要做了以下几件事：
+
+- 定义了天气资源的类型
+- 初始化了一个 MCP 服务器实例
+- 注册了资源和工具处理器
+- 启动了服务器
+
+其中资源和工具处理器我们通过 `TODO` 标记了，接下来我们就可以实现这些处理器了。
+
+### 实现资源处理器
+
+在 `setupResourceHandlers` 方法中，我们来实现资源处理器，先添加一个列出资源的处理器，然后添加一个读取资源的处理器，代码如下所示：
+
+```typescript
+private setupResourceHandlers(): void {
+  this.server.setRequestHandler(
+    ListResourcesRequestSchema,
+    async () => ({
+      resources: [{
+        uri: `weather://${API_CONFIG.DEFAULT_CITY}/current`,
+        name: `Current weather in ${API_CONFIG.DEFAULT_CITY}`,
+        mimeType: "application/json",
+        description: "Real-time weather data including temperature, conditions, humidity, and wind speed"
+      }]
+    })
+  );
+
+  this.server.setRequestHandler(
+    ReadResourceRequestSchema,
+    async (request) => {
+      const city = API_CONFIG.DEFAULT_CITY;
+      if (request.params.uri !== `weather://${city}/current`) {
+        throw new McpError(
+          ErrorCode.InvalidRequest,
+          `Unknown resource: ${request.params.uri}`
+        );
+      }
+
+      try {
+        const response = await this.axiosInstance.get<OpenWeatherResponse>(
+          API_CONFIG.ENDPOINTS.CURRENT,
+          {
+            params: { q: city }
+          }
+        );
+
+        const weatherData: WeatherData = {
+          temperature: response.data.main.temp,
+          conditions: response.data.weather[0].description,
+          humidity: response.data.main.humidity,
+          wind_speed: response.data.wind.speed,
+          timestamp: new Date().toISOString()
+        };
+
+        return {
+          contents: [{
+            uri: request.params.uri,
+            mimeType: "application/json",
+            text: JSON.stringify(weatherData, null, 2)
+          }]
+        };
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          throw new McpError(
+            ErrorCode.InternalError,
+            `Weather API error: ${error.response?.data.message ?? error.message}`
+          );
+        }
+        throw error;
+      }
+    }
+  );
+}
+```
+
+列出资源的处理器实现很简单，这里我们自定义 `weather` 的协议，然后的数据类型是 JSON 格式的。在获取资源时，我们先通过 `axios` 请求 OpenWeather API 获取当前天气数据，然后将其转换为 `WeatherData` 类型并返回即可。
+
+### 实现工具处理器
+
+资源处理器实现后，我们就可以实现工具处理器了。工具处理器主要用于实现一些工具函数，这里我们实现一个查询未来天气预报的工具，代码如下所示：
+
+```typescript
+private setupToolHandlers(): void {
+  this.server.setRequestHandler(
+    ListToolsRequestSchema,
+    async () => ({
+      tools: [{
+        name: "get_forecast",
+        description: "Get weather forecast for a city",
+        inputSchema: {
+          type: "object",
+          properties: {
+            city: {
+              type: "string",
+              description: "City name"
+            },
+            days: {
+              type: "number",
+              description: "Number of days (1-5)",
+              minimum: 1,
+              maximum: 5
+            }
+          },
+          required: ["city"]
+        }
+      }]
+    })
+  );
+
+  this.server.setRequestHandler(
+    CallToolRequestSchema,
+    async (request) => {
+      if (request.params.name !== "get_forecast") {
+        throw new McpError(
+          ErrorCode.MethodNotFound,
+          `Unknown tool: ${request.params.name}`
+        );
+      }
+
+      if (!isValidForecastArgs(request.params.arguments)) {
+        throw new McpError(
+          ErrorCode.InvalidParams,
+          "Invalid forecast arguments"
+        );
+      }
+
+      const city = request.params.arguments.city;
+      const days = Math.min(request.params.arguments.days || 3, 5);
+
+      try {
+        const response = await this.axiosInstance.get<{
+          list: OpenWeatherResponse[]
+        }>(API_CONFIG.ENDPOINTS.FORECAST, {
+          params: {
+            q: city,
+            cnt: days * 8 // API 返回 3 小时间隔的数据
+          }
+        });
+
+        const forecasts: ForecastDay[] = [];
+        for (let i = 0; i < response.data.list.length; i += 8) {
+          const dayData = response.data.list[i];
+          forecasts.push({
+            date: dayData.dt_txt?.split(' ')[0] ?? new Date().toISOString().split('T')[0],
+            temperature: dayData.main.temp,
+            conditions: dayData.weather[0].description
+          });
+        }
+
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(forecasts, null, 2)
+          }]
+        };
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          return {
+            content: [{
+              type: "text",
+              text: `Weather API error: ${error.response?.data.message ?? error.message}`
+            }],
+            isError: true,
+          }
+        }
+        throw error;
+      }
+    }
+  );
+}
+```
+
+同样需要先实现列出工具的处理器，然后实现调用工具的处理器。这里我们只定义了一个名为 `get_forecast` 的工具，该工具用于获取指定城市的天气预报，需要接收两个参数 `city` 和 `days`，其中 `city` 是城市名称，`days` 是查询的天数，默认是 3 天，当然数据还是通过请求 OpenWeather API 获取的。
+
+其实上面我们定义的资源可以直接通过工具来获取，我们添加一个获取当前天气的工具即可，因为数据都是通过 OpenWeather API 获取的，所以不定义资源也是可以的，只是这里为了演示 MCP 的用法，所以我们定义了资源。
+
+### 测试
+
+到这里我们就实现了一个简单的天气 MCP 服务，接下来我们就可以测试了。
+
+首先我们需要构建项目：
+
+```bash
+npm run build
+```
+
+然后需要需要重新更新下 Claude Desktop 的配置:
+
+```bash
+code ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+将我们的天气服务添加到配置中，如下所示：
+
+```json
+{
+  "mcpServers": {
+    //...... 其他服务器配置
+    "weather": {
+      "command": "node",
+      "args": ["/Users/cnych/src/weather-server/build/index.js"],
+      "env": {
+        "OPENWEATHER_API_KEY": "your_openweather_api_key"
+      }
+    }
+  }
+}
+```
+
+其中 `args` 是我们构建后的文件路径，`env` 是我们需要配置的 OpenWeather API 的 key。配置完成后重启 Claude Desktop 即可。
+
+### 测试
+
+接下来我们就可以测试了，点击 Claude Desktop 输入框右下角的数字按钮，里面就会列出我们定义的 `get_forecast` 工具。
+
+![Claude Weather Tools](/images/claude-weather-tools.png)
+
+接下来我们就可以测试了，比如我们询问 Claude 未来 5 天的天气预报：
+
+```bash
+Can you get me a 5-day forecast for Beijing and tell me if I should pack an umbrella?
+```
+
+![Claude Weather Current](/images/claude-weather-forecast.png)
+
+可以看到会调用 `get_forecast` 工具（需要授权）并显示结果。
+
+### 调试
+
+如果我们在测试过程中遇到问题，可以通过一些方式来调试，比如查看 MCP 的详细日志：
+
+```bash
+# 实时查看日志
+tail -n 20 -f ~/Library/Logs/Claude/mcp*.log
+```
+
+这里的日志会捕获服务器连接事件、配置问题、运行时错误、消息交换等信息。
+
+除了日志外，我们还可以通过 `Chrome DevTools` 来进行调试，在 Claude Desktop 中访问 Chrome 的开发人员工具以查看客户端错误。可以在文件 `~/Library/Application\ Support/Claude/developer_settings.json` 中添加如下配置开启 DevTools：
+
+```json
+{
+  "allowDevTools": true
+}
+```
+
+然后使用快捷键 `Command+Option+Shift+i` 就可以打开 DevTools 了，和在 Chrome 浏览器中调试一样的。
+
+![Claude DevTools](/images/claude-devtools.png)
+
+除了上面这些常规的调试方式之外，Claude MCP 官方还提供了一个 `Inspector` 工具，**MCP Inspector** 是一种用于测试和调试 MCP 服务器的交互式开发人员工具。
+
+直接通过 `npx` 命令就可以使用，不需要安装：
+
+```bash
+npx @modelcontextprotocol/inspector <command>
+# 或者
+npx @modelcontextprotocol/inspector <command> <arg1> <arg2>
+```
+
+如果服务器包来自 NPM，则可以使用下面的方式来启动：
+
+```bash
+npx -y @modelcontextprotocol/inspector npx <package-name> <args>
+# 例如
+npx -y @modelcontextprotocol/inspector npx server-postgres postgres://127.0.0.1/testdb
+```
+
+如果是本地构建的包，则可以使用下面的方式来启动：
+
+```bash
+npx @modelcontextprotocol/inspector node path/to/server/index.js args...
+```
+
+比如我们上面构建的天气服务，则可以使用下面的方式来启动：
+
+```bash
+npx @modelcontextprotocol/inspector node /Users/cnych/src/weather-server/build/index.js
+```
+
+`Inspector` 工具启动后，会在 `localhost:5173` 启动一个 Web 页面，我们就可以在上面测试和调试我们的天气服务了。
+
+![MCP Inspector](/images/claude-inspector-ui.png)
+
+这里需要注意，我们需要点击右侧的 `Environment Variables` 按钮，然后添加 `OPENWEATHER_API_KEY` 环境变量，值为我们申请的 OpenWeather API 的 key，然后点击 `Connect` 按钮即可连接到天气服务。
+
+连接成功后，我们就可以在右侧主窗口可以看到天气服务的资源和工具了，我们就可以测试和调试了，点击 `List Resources` 按钮就可以列出天气服务的资源，点击列出的资源就可以读取并显示资源内容了。
+
+![MCP Inspector 资源](/images/claude-inspector-resources.png)
+
+同样我们也可以测试 Tools，可以点击 `List Tools` 按钮列出天气服务的工具，然后点击具体的某个工具，输入参数后点击 `Run Tool` 按钮即可调用工具并显示结果。
+
+![MCP Inspector 工具](/images/claude-inspector-tools.png)
+
+当然除了 Resources 和 Tools 之外，还可以测试 Prompts、Sampling 等。
+
+到这里我们就实现了一个简单的天气 MCP 服务。
