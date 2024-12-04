@@ -14,7 +14,7 @@ export function TagList() {
   useEffect(() => {
     async function fetchTags() {
       try {
-        const res = await fetch(`/api/servers/${locale}/tags`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/servers/${locale}/tags`);
         const data = await res.json();
         setTags(data);
       } catch (error) {

@@ -59,6 +59,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: 1,
     })),
+    ...Object.keys(languages).map((lang) => ({
+      url: lang === "en" ? `${baseUrl}/servers` : `${baseUrl}/${lang}/servers`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 1,
+    })),
   ];
 
   return [...homeUrls, ...staticUrls, ...docsUrls];

@@ -65,6 +65,7 @@ export async function getServer(id: string, locale: string = 'en'): Promise<MCPS
       createTime: data.createTime || new Date().toISOString(),
     } as MCPServer;
   } catch (error) {
+    console.error(`Error fetching server with id ${id}:`, error);
     return null;
   }
 }

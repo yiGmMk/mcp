@@ -21,7 +21,7 @@ export function ServerDetails({ id }: { id: string }) {
   useEffect(() => {
     async function fetchServer() {
       try {
-        const res = await fetch(`/api/servers/${locale}/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/servers/${locale}/${id}`);
         const data = await res.json();
         setServer(data);
       } catch (error) {

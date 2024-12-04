@@ -17,7 +17,7 @@ export function ServerList() {
     async function fetchServers() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/servers/${locale}?${searchParams?.toString() ?? ''}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/servers/${locale}?${searchParams?.toString() ?? ''}`);
         const data = await res.json();
         setServers(data);
       } catch (error) {
