@@ -1,5 +1,6 @@
 {
     "nav": {
+      "servers": "服务目录",
       "documentation": "文档",
       "blog": "博客",
       "specification": "协议规范",
@@ -725,6 +726,19 @@
       "failed": "失败",
       "copied": "已复制",
       "learnMore": "了解更多"
+    },
+    "Servers": {
+      "title": "Claude MCP 服务器目录",
+      "description": "探索流行的 Model Context Protocol 服务器",
+      "search": "搜索...",
+      "viewAll": "查看所有",
+      "noServers": "没有找到服务器",
+      "author": "作者",
+      "links": "链接",
+      "homepage": "主页",
+      "repository": "仓库",
+      "tags": "标签",
+      "capabilities": "功能"
     },
     "Docs": {
       "meta": {

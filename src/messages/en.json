@@ -1,5 +1,6 @@
 {
   "nav": {
+    "servers": "Server Directory",
     "documentation": "Documentation",
     "blog": "Blog",
     "specification": "Protocol Specification",
@@ -710,6 +711,19 @@
     "failed": "Failed",
     "copied": "Copied",
     "learnMore": "Learn More"
+  },
+  "Servers": {
+    "title": "Model Context Protocol Server Directory",
+    "description": "Discover popular Model Context Protocol servers",
+    "search": "Search...",
+    "viewAll": "View All",
+    "noServers": "No servers found",
+    "author": "Author",
+    "links": "Links",
+    "homepage": "Homepage",
+    "repository": "Repository",
+    "tags": "Tags",
+    "capabilities": "Capabilities"
   },
   "Docs": {
       "meta": {

@@ -39,6 +39,13 @@ export default function LanguageSwitcher() {
         params: { slug: slug! }
       }
     }
+    if (path.startsWith('/servers/') && path !== '/servers') {
+      const id = path.split('/').pop()
+      return {
+        pathname: '/servers/[id]' as keyof Pathnames,
+        params: { id: id! }
+      }
+    }
     return {
       pathname: (pathnames[path as keyof typeof pathnames] || '/') as keyof Pathnames,
       params: undefined

@@ -27,6 +27,19 @@ export default function Navbar() {
             </Link>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link 
+                href="/servers"
+                aria-label={t('servers')}
+                title={t('servers')}
+                className={cn(
+                  "inline-flex items-center px-1 pt-1 text-sm font-medium",
+                  path.startsWith('/servers')
+                    ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
+                    : "text-gray-900 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-400"
+                )}
+              >
+                {t('servers')}
+              </Link>
+              <Link 
                 href="/docs"
                 aria-label={t('documentation')}
                 title={t('documentation')}

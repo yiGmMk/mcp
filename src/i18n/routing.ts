@@ -11,7 +11,9 @@ export const routing = defineRouting({
     '/docs/[slug]': '/docs/[slug]',
     '/blog': '/blog',
     '/specification': '/specification',
-    '/community': '/community'
+    '/community': '/community',
+    '/servers': '/servers',
+    '/servers/[id]': '/servers/[id]'
   },
   localePrefix: 'as-needed'
 })

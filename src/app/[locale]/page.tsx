@@ -5,6 +5,7 @@ import { OverviewSection } from '@/components/home/overview-section';
 import { ProtocolSection } from '@/components/home/protocol-section';
 import { IntegrationSection } from '@/components/home/integration-section';
 import { GlobalSection } from '@/components/home/global-section';
+import { FeaturedServers } from '@/components/home/featured-servers';
 
 type PageProps = {  
     params: Promise<{ locale: string }>;
@@ -18,6 +19,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: t('meta.title'),
     description: t('meta.description'),
     keywords: t('meta.keywords'),
+    icons: {
+      icon: "/logo.png",
+      apple: "/apple-touch-icon.png",
+    },
     openGraph: {
       title: t('meta.og.title'),
       description: t('meta.og.description'),
@@ -32,6 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     alternates: {
         canonical: `https://www.claudemcp.com/${locale}`,
     },
+    manifest: "/site.webmanifest",
   };
 }
 
@@ -42,6 +48,7 @@ export default function Home() {
       <OverviewSection />
       <ProtocolSection />
       <IntegrationSection />
+      <FeaturedServers />
       <GlobalSection />
     </main>
   );
