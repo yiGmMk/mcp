@@ -5,6 +5,7 @@ export interface DocMeta {
   section: string;
   prev?: string;
   next?: string;
+  lastModified?: string;
 }
 
 export interface DocContent extends DocMeta {

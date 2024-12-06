@@ -18,7 +18,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: t('meta.title'),
     description: t('meta.description'),
-    keywords: t('meta.keywords'),
     icons: {
       icon: "/logo.png",
       apple: "/apple-touch-icon.png",
@@ -35,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: ['/twitter-image.png'],
     },
     alternates: {
-        canonical: `https://www.claudemcp.com/${locale}`,
+        canonical: locale === 'en' ? `https://www.claudemcp.com` : `https://www.claudemcp.com/${locale}`,
     },
     manifest: "/site.webmanifest",
   };
@@ -45,10 +44,10 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col antialiased">
       <HeroSection />
+      <FeaturedServers />
       <OverviewSection />
       <ProtocolSection />
       <IntegrationSection />
-      <FeaturedServers />
       <GlobalSection />
     </main>
   );

@@ -14,7 +14,7 @@
   },
   "Index": {
     "meta": {
-      "title": "Model Context Protocol",
+      "title": "Claude MCP - Model Context Protocol",
       "description": "An open protocol standard for establishing unified context interaction between AI models and development environments",
       "keywords": "AI, Protocol, Context, Development Environment, Claude",
       "og": {

@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { remark } from "remark";
 import html from "remark-html";
@@ -11,27 +10,9 @@ import type { MCPServer } from "@/types/server";
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { useTranslations } from "next-intl";
 
-export function ServerDetails({ id }: { id: string }) {
-  const { locale } = useParams();
+export function ServerDetails({ server }: { server: MCPServer }) {
   const t = useTranslations('Servers');
-  const [server, setServer] = useState<MCPServer | null>(null);
-  const [loading, setLoading] = useState(true);
   const [content, setContent] = useState("");
-
-  useEffect(() => {
-    async function fetchServer() {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/servers/${locale}/${id}`);
-        const data = await res.json();
-        setServer(data);
-      } catch (error) {
-        console.error("Failed to fetch server:", error);
-      }
-      setLoading(false);
-    }
-
-    fetchServer();
-  }, [id, locale]);
 
   useEffect(() => {
     async function processContent() {
@@ -46,13 +27,13 @@ export function ServerDetails({ id }: { id: string }) {
     processContent();
   }, [server]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex justify-center items-center min-h-[200px]">
+  //       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400" />
+  //     </div>
+  //   );
+  // }
 
   if (!server) {
     return (
@@ -69,7 +50,7 @@ export function ServerDetails({ id }: { id: string }) {
       <Breadcrumb
         items={[
           { label: t('title'), href: '/servers' },
-          { label: server?.name || id }
+          { label: server.name }
         ]}
       />
 

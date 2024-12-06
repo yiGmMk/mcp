@@ -1,20 +1,41 @@
 import { languages } from "@/i18n/config";
 import { MetadataRoute } from "next";
+import { getServers } from "@/lib/servers";
+import type { DocMeta } from "@/lib/docs";
 
-// async function fetchDocs(locale: string): Promise<DocMeta[]> {
-//   const response = await fetch(
-//     `${process.env.NEXT_PUBLIC_SITE_URL}/api/docs/${locale}`
-//   );
-//   if (!response.ok) {
-//     throw new Error("Failed to fetch docs");
-//   }
-//   return (await response.json()) as DocMeta[];
-// }
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudemcp.com";
+
+async function fetchDocs(locale: string): Promise<DocMeta[]> {
+  try {
+    const response = await fetch(`${baseUrl}/api/docs/${locale}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch docs");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Failed to fetch docs for locale ${locale}:`, error);
+    return [];
+  }
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://www.claudemcp.com";
+  // 获取所有语言的服务器数据
+  const serversByLocale = await Promise.all(
+    Object.keys(languages).map(async (lang) => {
+      const servers = await getServers(lang);
+      return { locale: lang, servers };
+    })
+  );
 
-  // 生成首页 URL (包含所有语言版本)
+  // 获取所有语言的文档数据
+  const docsByLocale = await Promise.all(
+    Object.keys(languages).map(async (lang) => {
+      const docs = await fetchDocs(lang);
+      return { locale: lang, docs };
+    })
+  );
+
+  // 生成首页 URLs
   const homeUrls = Object.keys(languages).map((lang) => ({
     url: lang === "en" ? baseUrl : `${baseUrl}/${lang}`,
     lastModified: new Date(),
@@ -22,50 +43,61 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 1,
   }));
 
-  // 生成文档 URL
-  const docsUrls: any[] = [];
-  for (const lang of Object.keys(languages)) {
-    const docs = ["introduction", "architecture", "protocol", "quickstart", "write-ts-server"];
-    docs.forEach((doc) => {
-      docsUrls.push({
-        url: lang === "en" ? `${baseUrl}/docs/${doc}` : `${baseUrl}/${lang}/docs/${doc}`,
-        lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 1,
-      });
-    });
-  }
+  // 生成服务器列表页 URLs
+  const serverListUrls = Object.keys(languages).map((lang) => ({
+    url: lang === "en" ? `${baseUrl}/servers` : `${baseUrl}/${lang}/servers`,
+    lastModified: new Date(),
+    changeFrequency: "daily" as const,
+    priority: 0.9,
+  }));
 
-  // 静态页面 URL
-  const staticUrls = [
-    ...Object.keys(languages).map((lang) => ({
+  // 生成服务器详情页 URLs
+  const serverDetailUrls = serversByLocale.flatMap(({ locale, servers }) =>
+    servers.map((server) => ({
       url:
-        lang === "en"
-          ? `${baseUrl}/specification`
-          : `${baseUrl}/${lang}/specification`,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 1,
-    })),
-    ...Object.keys(languages).map((lang) => ({
+        locale === "en"
+          ? `${baseUrl}/servers/${server.id}`
+          : `${baseUrl}/${locale}/servers/${server.id}`,
+      lastModified: new Date(server.createTime),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }))
+  );
+
+  // 生成文档页面 URLs
+  const docUrls = docsByLocale.flatMap(({ locale, docs }) =>
+    docs.map((doc) => ({
+      url:
+        locale === "en"
+          ? `${baseUrl}/docs/${doc.slug}`
+          : `${baseUrl}/${locale}/docs/${doc.slug}`,
+      lastModified: doc.lastModified ? new Date(doc.lastModified) : new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }))
+  );
+
+  // 生成其他静态页面 URLs
+  const staticUrls = Object.keys(languages).flatMap((lang) => [
+    {
       url: lang === "en" ? `${baseUrl}/docs` : `${baseUrl}/${lang}/docs`,
       lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 1,
-    })),
-    ...Object.keys(languages).map((lang) => ({
-      url: lang === "en" ? `${baseUrl}/blog` : `${baseUrl}/${lang}/blog`,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    },
+    {
+      url: lang === "en" ? `${baseUrl}/specification` : `${baseUrl}/${lang}/specification`,
       lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 1,
-    })),
-    ...Object.keys(languages).map((lang) => ({
-      url: lang === "en" ? `${baseUrl}/servers` : `${baseUrl}/${lang}/servers`,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 1,
-    })),
-  ];
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+  ]);
 
-  return [...homeUrls, ...staticUrls, ...docsUrls];
+  return [
+    ...homeUrls,
+    ...serverListUrls,
+    ...serverDetailUrls,
+    ...docUrls,
+    ...staticUrls,
+  ];
 }
