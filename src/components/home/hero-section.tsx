@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Book } from 'lucide-react';
+import { Book } from 'lucide-react';
 
 const container = {
   hidden: { opacity: 0 },
