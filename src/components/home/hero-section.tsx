@@ -73,12 +73,8 @@ export function HeroSection() {
             className="flex items-center justify-center gap-6 pt-4"
             variants={item}
           >
-            <Button size="lg" className="h-12 px-6 text-base glow-effect group">
-              {t('hero.getStarted')}
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
             <Link href="/docs">
-              <Button variant="outline" size="lg" className="h-12 px-6 text-base glass-effect hover-card">
+              <Button variant="default" size="lg" className="h-12 px-6 text-base hover-card">
                 {t('hero.documentation')}
                 <Book className="ml-2" />
               </Button>

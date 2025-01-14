@@ -20,7 +20,7 @@ export function FeaturedServers() {
       setLoading(true);
       try {
         // 获取前3个服务器作为精选
-        const res = await fetch(`/api/servers/${locale}?pageSize=3`);
+        const res = await fetch(`/api/servers/${locale}?pageSize=6`);
         const data = await res.json();
         setServers(data);
       } catch (error) {

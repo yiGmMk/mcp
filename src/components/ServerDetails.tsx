@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { remark } from "remark";
 import html from "remark-html";
 import { Markdown } from "@/components/ui/markdown";
@@ -27,13 +26,6 @@ export function ServerDetails({ server }: { server: MCPServer }) {
     processContent();
   }, [server]);
 
-  // if (loading) {
-  //   return (
-  //     <div className="flex justify-center items-center min-h-[200px]">
-  //       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400" />
-  //     </div>
-  //   );
-  // }
 
   if (!server) {
     return (
@@ -166,14 +158,11 @@ export function ServerDetails({ server }: { server: MCPServer }) {
       </div>
 
       {/* Documentation */}
-      <motion.article
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+      <div
         className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm prose dark:prose-invert max-w-none"
       >
         <Markdown content={content} />
-      </motion.article>
+      </div>
     </div>
   );
 }

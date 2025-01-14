@@ -1,7 +1,8 @@
 'use client'
 
 import {useTranslations} from 'next-intl'
-import {Link} from '@/i18n/routing'
+import {Link as I18nLink} from '@/i18n/routing'
+import Link from 'next/link'
 import LanguageSwitcher from './LanguageSwitcher'
 import ThemeToggle from './ThemeToggle'
 import { usePathname } from 'next/navigation'
@@ -21,12 +22,12 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
-            <Link href="/" aria-label="Claude MCP" title="Claude MCP" className="flex items-center">
+            <I18nLink href="/" aria-label="Claude MCP" title="Claude MCP" className="flex items-center">
               <img src="/logo.png" alt="Claude MCP" className="w-10 h-auto mr-1" />
               <span className="text-xl font-bold text-gray-900 dark:text-white">MCP</span>
-            </Link>
+            </I18nLink>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link 
+              <I18nLink 
                 href="/servers"
                 aria-label={t('servers')}
                 title={t('servers')}
@@ -38,8 +39,8 @@ export default function Navbar() {
                 )}
               >
                 {t('servers')}
-              </Link>
-              <Link 
+              </I18nLink>
+              <I18nLink 
                 href="/docs"
                 aria-label={t('documentation')}
                 title={t('documentation')}
@@ -51,8 +52,8 @@ export default function Navbar() {
                 )}
               >
                 {t('documentation')}
-              </Link>
-              <Link 
+              </I18nLink>
+              <I18nLink 
                 href="/specification"
                 aria-label={t('specification')}
                 title={t('specification')}
@@ -64,9 +65,9 @@ export default function Navbar() {
                 )}
               >
                 {t('specification')}
-              </Link>
+              </I18nLink>
               <Link
-                href="/blog"
+                href="https://www.qikqiak.com"
                 aria-label={t('blog')}
                 title={t('blog')}
                 className={cn(
