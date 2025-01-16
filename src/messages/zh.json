@@ -1,6 +1,6 @@
 {
   "nav": {
-    "servers": "服务目录",
+    "servers": "服务端",
     "documentation": "文档",
     "blog": "博客",
     "specification": "协议规范",
@@ -42,8 +42,8 @@
     },
     "hero": {
       "introducing": "全新发布",
-      "title": "统一的模型上下文交互协议",
-      "description": "MCP（Model Context Protocol）是 Claude 定制的一个开放的协议标准，用于在AI模型和开发环境之间建立统一的上下文交互，让AI更好地理解和处理代码",
+      "title": "模型上下文协议",
+      "description": "MCP（Model Context Protocol）是 Claude 开源的一个开放协议标准，用于在AI模型和开发环境之间建立统一的上下文交互，让AI更好地理解和处理代码",
       "getStarted": "开始使用",
       "documentation": "查看文档"
     },
@@ -738,11 +738,11 @@
     "learnMore": "了解更多"
   },
   "Servers": {
-    "title": "Claude MCP 服务器目录",
-    "description": "探索流行的 Model Context Protocol 服务器",
+    "title": "Claude MCP 服务端",
+    "description": "探索流行的 Model Context Protocol 服务端",
     "search": "搜索...",
     "viewAll": "查看所有",
-    "noServers": "没有找到服务器",
+    "noServers": "没有找到服务端",
     "author": "作者",
     "links": "链接",
     "homepage": "主页",
@@ -765,7 +765,7 @@
     },
     "nav": {
       "getting_started": "入门指南",
-      "write_server": "MCP 服务器",
+      "write_server": "MCP 服务端",
       "guides": "使用指南",
       "advanced": "高级主题",
       "previous": "上一节",
@@ -777,7 +777,7 @@
         "protocol": "协议",
         "quickstart": "快速开始",
         "getting_started": "入门指南",
-        "write-ts-server": "MCP 服务器",
+        "write-ts-server": "MCP 服务端",
         "resources": "资源管理",
         "tools": "工具使用",
         "messages": "消息处理",
