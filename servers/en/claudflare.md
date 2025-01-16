@@ -18,7 +18,7 @@ icon: https://cdn.simpleicons.org/cloudflare
 createTime: 2024-12-01T00:00:00Z
 ---
 
-Model Context Protocol (MCP) is a [new, standardized protocol](https://www.claudemcp.com) for managing context between large language models (LLMs) and external systems. In this repository, we provide an installer as well as an MCP Server for [Cloudflare's API](https://api.cloudflare.com).
+Model Context Protocol (MCP) is a [new, standardized protocol](https://mcp.programnotes.cn/) for managing context between large language models (LLMs) and external systems. In this repository, we provide an installer as well as an MCP Server for [Cloudflare's API](https://api.cloudflare.com).
 
 This lets you use Claude Desktop, or any MCP Client, to use natural language to accomplish things on your Cloudflare account, e.g.:
 

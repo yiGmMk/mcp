@@ -3,7 +3,7 @@ import { MetadataRoute } from "next";
 import { getServers } from "@/lib/servers";
 import type { DocMeta } from "@/lib/docs";
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudemcp.com";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mcp.programnotes.cn/";
 
 async function fetchDocs(locale: string): Promise<DocMeta[]> {
   try {

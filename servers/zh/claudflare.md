@@ -18,7 +18,7 @@ icon: https://cdn.simpleicons.org/cloudflare
 createTime: 2024-12-01T00:00:00Z
 ---
 
-模型上下文协议(MCP)是一个[新的标准化协议](https://www.claudemcp.com)，用于管理大型语言模型(LLM)和外部系统之间的上下文。在这个仓库中，我们提供了一个安装程序以及一个用于[Cloudflare API](https://api.cloudflare.com)的 MCP 服务器。
+模型上下文协议(MCP)是一个[新的标准化协议](https://mcp.programnotes.cn/)，用于管理大型语言模型(LLM)和外部系统之间的上下文。在这个仓库中，我们提供了一个安装程序以及一个用于[Cloudflare API](https://api.cloudflare.com)的 MCP 服务器。
 
 这让您可以使用 Claude Desktop 或任何 MCP 客户端，通过自然语言在您的 Cloudflare 账户上完成各种任务，例如：
 
