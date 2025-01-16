@@ -37,7 +37,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: locale === 'en' ? `https://mcp.programnotes.cn` : `https://mcp.programnotes.cn/${locale}`,
     },
     manifest: "/site.webmanifest",
-    "msvalidate.01": "B6FE76A783A1770409EC903DE2C7AC6A"
+    other: {
+      "msvalidate.01": "B6FE76A783A1770409EC903DE2C7AC6A"
+    }
   };
 }
 
