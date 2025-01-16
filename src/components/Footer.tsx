@@ -1,4 +1,4 @@
-import { Github, Twitter, Globe } from 'lucide-react'
+import { Github, Globe } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { Link as I18nLink } from '@/i18n/routing'
