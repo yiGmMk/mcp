@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.claudemcp.com/sitemap.xml",
+    sitemap: "https://mcp.programnotes.cn/sitemap.xml",
   };
 }

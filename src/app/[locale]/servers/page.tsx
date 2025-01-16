@@ -4,13 +4,13 @@ import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 
 
-type PageProps = {  
+type PageProps = {
   params: Promise<{ locale: string }>;
 }
 
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const {locale} = await params;
+  const { locale } = await params;
   const t = await getTranslations();
 
   return {
@@ -32,20 +32,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: ['/twitter-image.png'],
     },
     alternates: {
-        canonical: locale === 'en' ? `https://www.claudemcp.com/servers` : `https://www.claudemcp.com/${locale}/servers`,
+      canonical: locale === 'en' ? `https://mcp.programnotes.cn/servers` : `https://mcp.programnotes.cn/${locale}/servers`,
     },
     manifest: "/site.webmanifest",
   };
 }
 
 export default async function ServersPage() {
-  const t  = await getTranslations('Servers');
+  const t = await getTranslations('Servers');
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100">
         {t('title')}
       </h1>
-      
+
       <div className="space-y-6 max-w-7xl mx-auto">
         <SearchBar />
         <ServerList />

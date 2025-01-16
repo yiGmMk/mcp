@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: t('meta.og.description'),
     },
     alternates: {
-      canonical: locale === 'en' ? `https://www.claudemcp.com/specification` : `https://www.claudemcp.com/${locale}/specification`,
-    },  
+      canonical: locale === 'en' ? `https://mcp.programnotes.cn/specification` : `https://mcp.programnotes.cn/${locale}/specification`,
+    },
   }
 }
 

@@ -59,7 +59,12 @@
           "revision": "Protocol Revision: 2024-11-05",
           "primitives": {
             "description": "Each primitive can be summarized in the following control hierarchy:",
-            "headers": ["Primitive", "Control", "Description", "Example"],
+            "headers": [
+              "Primitive",
+              "Control",
+              "Description",
+              "Example"
+            ],
             "items": [
               {
                 "primitive": "Prompts",
@@ -347,7 +352,7 @@
                   "jsonrpc": "2.0",
                   "id": "string | number",
                   "method": "string",
-                  "param?": {  
+                  "param?": {
                     "key": "value"
                   }
                 }
@@ -635,7 +640,12 @@
         "title": "Server Features",
         "description": "The server provides the basic building blocks for adding context to language models via MCP, offering three fundamental primitives for managing context: prompts, resources, and tools.",
         "primitives": {
-          "headers": ["Primitive", "Control", "Description", "Example"],
+          "headers": [
+            "Primitive",
+            "Control",
+            "Description",
+            "Example"
+          ],
           "items": [
             {
               "primitive": "Prompts",
@@ -726,40 +736,40 @@
     "capabilities": "Capabilities"
   },
   "Docs": {
-      "meta": {
-          "title": "MCP Documentation",
-          "description": "The premier platform for Claude MCP protocol documentation, developer resources and community collaboration.",
-          "og": {
-            "title": "MCP Documentation", 
-            "description": "The premier platform for Claude MCP protocol documentation, developer resources and community collaboration."
-          },
-          "twitter": {
-            "title": "MCP Documentation",
-            "description": "The premier platform for Claude MCP protocol documentation, developer resources and community collaboration."
-          }
-        },
-      "nav": {
+    "meta": {
+      "title": "MCP Documentation",
+      "description": "The premier platform for Claude MCP protocol documentation, developer resources and community collaboration.",
+      "og": {
+        "title": "MCP Documentation",
+        "description": "The premier platform for Claude MCP protocol documentation, developer resources and community collaboration."
+      },
+      "twitter": {
+        "title": "MCP Documentation",
+        "description": "The premier platform for Claude MCP protocol documentation, developer resources and community collaboration."
+      }
+    },
+    "nav": {
+      "getting_started": "Getting Started",
+      "write_server": "MCP Server",
+      "guides": "Guides",
+      "advanced": "Advanced Topics",
+      "previous": "Previous",
+      "next": "Next",
+      "items": {
+        "introduction": "Introduction",
+        "architecture": "Architecture",
+        "installation": "Installation",
+        "protocol": "Protocol",
+        "quickstart": "Quick Start",
         "getting_started": "Getting Started",
-        "write_server": "MCP Server",
-        "guides": "Guides",
-        "advanced": "Advanced Topics",
-        "previous": "Previous",
-        "next": "Next",
-        "items": {
-          "introduction": "Introduction",
-          "architecture": "Architecture",
-          "installation": "Installation",
-          "protocol": "Protocol",
-          "quickstart": "Quick Start",
-          "getting_started": "Getting Started",
-          "write-ts-server": "MCP Server",
-          "resources": "Resource Management",
-          "tools": "Tools Usage",
-          "messages": "Message Handling",
-          "security": "Security",
-          "deployment": "Deployment",
-          "configuration": "Configuration"
-        }
+        "write-ts-server": "MCP Server",
+        "resources": "Resource Management",
+        "tools": "Tools Usage",
+        "messages": "Message Handling",
+        "security": "Security",
+        "deployment": "Deployment",
+        "configuration": "Configuration"
       }
     }
+  }
 }

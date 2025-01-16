@@ -10,15 +10,13 @@ export function Footer() {
   const navigation = {
     product: [
       { name: 'Documentation', href: '/docs' as keyof Pathnames },
-      { name: 'Blog', href: 'https://www.qikqiak.com' },
-      { name: 'JoyGames', href: 'https://www.joygames.io'},
-      { name: 'SprunkiGame', href: 'https://sprunkigame.top' },
+      { name: 'Blog', href: 'https://programnotes.cn' },
+      { name: 'AI', href: 'https://nav.programnotes.cn' },
     ],
     community: [
-      { name: t('links.github'), href: 'https://github.com/anthropics/mcp' },
+      { name: t('links.github'), href: 'https://github.com/modelcontextprotocol' },
       { name: t('links.discord'), href: '/discord' },
-      { name: t('links.twitter'), href: 'https://twitter.com/anthropic' },
-      { name: t('links.feedback'), href: '/feedback' },
+      { name: t('links.feedback'), href: 'https://github.com/modelcontextprotocol' },
     ],
     legal: [
       { name: 'Privacy', href: '/docs' as keyof Pathnames },
@@ -28,7 +26,6 @@ export function Footer() {
 
   const socialLinks = [
     { name: 'GitHub', href: 'https://github.com/anthropics/mcp', icon: Github },
-    { name: 'Twitter', href: 'https://twitter.com/anthropic', icon: Twitter },
     { name: 'Website', href: 'https://anthropic.com', icon: Globe },
   ]
 

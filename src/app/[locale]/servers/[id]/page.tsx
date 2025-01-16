@@ -21,10 +21,10 @@ async function fetchServer(locale: string, id: string) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const {locale, id} = await params;
+  const { locale, id } = await params;
   const t = await getTranslations('Servers');
   const server = await fetchServer(locale, id);
-  
+
   return {
     title: `${server?.name} | ${t('title')}`,
     description: `${server?.digest} | ${t('title')}`,
@@ -44,14 +44,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: ['/twitter-image.png'],
     },
     alternates: {
-        canonical: locale === 'en' ? `https://www.claudemcp.com/servers/${id}` : `https://www.claudemcp.com/${locale}/servers/${id}`,
+      canonical: locale === 'en' ? `https://mcp.programnotes.cn/servers/${id}` : `https://mcp.programnotes.cn/${locale}/servers/${id}`,
     },
     manifest: "/site.webmanifest",
   };
 }
 
 export default async function ServerDetailPage({
-  params}: PageProps) {
+  params }: PageProps) {
 
   const { locale, id } = await params;
 

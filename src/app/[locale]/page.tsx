@@ -7,14 +7,14 @@ import { IntegrationSection } from '@/components/home/integration-section';
 import { GlobalSection } from '@/components/home/global-section';
 import { FeaturedServers } from '@/components/home/featured-servers';
 
-type PageProps = {  
-    params: Promise<{ locale: string }>;
-  }
+type PageProps = {
+  params: Promise<{ locale: string }>;
+}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const {locale} = await params;
+  const { locale } = await params;
   const t = await getTranslations('Index');
-  
+
   return {
     title: t('meta.title'),
     description: t('meta.description'),
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: ['/twitter-image.png'],
     },
     alternates: {
-        canonical: locale === 'en' ? `https://www.claudemcp.com` : `https://www.claudemcp.com/${locale}`,
+      canonical: locale === 'en' ? `https://mcp.programnotes.cn` : `https://mcp.programnotes.cn/${locale}`,
     },
     manifest: "/site.webmanifest",
   };

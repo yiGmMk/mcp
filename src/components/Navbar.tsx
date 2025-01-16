@@ -1,7 +1,7 @@
 'use client'
 
-import {useTranslations} from 'next-intl'
-import {Link as I18nLink} from '@/i18n/routing'
+import { useTranslations } from 'next-intl'
+import { Link as I18nLink } from '@/i18n/routing'
 import Link from 'next/link'
 import LanguageSwitcher from './LanguageSwitcher'
 import ThemeToggle from './ThemeToggle'
@@ -13,10 +13,10 @@ export default function Navbar() {
   const t = useTranslations('nav')
   const pathname = usePathname()
   const locale = useLocale()
-  
+
   // 从路径中移除语言前缀以获取实际路径
   const path = pathname.replace(`/${locale}`, '')
-  
+
   return (
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,7 +27,7 @@ export default function Navbar() {
               <span className="text-xl font-bold text-gray-900 dark:text-white">MCP</span>
             </I18nLink>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <I18nLink 
+              <I18nLink
                 href="/servers"
                 aria-label={t('servers')}
                 title={t('servers')}
@@ -40,7 +40,7 @@ export default function Navbar() {
               >
                 {t('servers')}
               </I18nLink>
-              <I18nLink 
+              <I18nLink
                 href="/docs"
                 aria-label={t('documentation')}
                 title={t('documentation')}
@@ -53,7 +53,7 @@ export default function Navbar() {
               >
                 {t('documentation')}
               </I18nLink>
-              <I18nLink 
+              <I18nLink
                 href="/specification"
                 aria-label={t('specification')}
                 title={t('specification')}
@@ -67,7 +67,7 @@ export default function Navbar() {
                 {t('specification')}
               </I18nLink>
               <Link
-                href="https://www.qikqiak.com"
+                href="https://programnotes.cn"
                 aria-label={t('blog')}
                 title={t('blog')}
                 className={cn(

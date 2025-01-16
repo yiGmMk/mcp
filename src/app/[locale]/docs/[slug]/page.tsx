@@ -36,7 +36,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params;
   const t = await getTranslations('Docs');
-  
+
   return {
     title: `${t('meta.title')} - ${t(`nav.items.${slug}`)}`,
     description: t('meta.description'),
@@ -45,8 +45,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: t('meta.og.description'),
     },
     alternates: {
-      canonical: locale === 'en' ? `https://www.claudemcp.com/docs/${slug}` : `https://www.claudemcp.com/${locale}/docs/${slug}`,
-    },  
+      canonical: locale === 'en' ? `https://mcp.programnotes.cn/docs/${slug}` : `https://mcp.programnotes.cn/${locale}/docs/${slug}`,
+    },
   };
 }
 
@@ -57,7 +57,7 @@ export default async function DocPage({ params }: PageProps) {
     <div className="relative min-h-screen bg-gradient-to-b from-gray-50/50 to-white dark:from-gray-950 dark:to-gray-900">
       {/* 顶部装饰 */}
       <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-blue-50/20 dark:from-blue-950/20" />
-      
+
       <div className="relative">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col lg:flex-row gap-8">
@@ -73,7 +73,7 @@ export default async function DocPage({ params }: PageProps) {
               <div className="prose prose-blue dark:prose-invert max-w-none">
                 <DocContent />
               </div>
-              
+
               {/* 文档导航 */}
               <DocNavigation locale={locale} slug={slug} />
             </div>
