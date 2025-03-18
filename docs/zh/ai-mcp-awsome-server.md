@@ -1,22 +1,12 @@
 ---
 title: 精选MCP服务器
 description: 精选的优秀模型上下文协议 (MCP) 服务器列表
-section: awsome_mcp_server
+section: write_server
 prev: write_server
 pubDate: 2025-03-18
 ---
 
 精选的优秀模型上下文协议 (MCP) 服务器列表。
-
-* [什么是MCP？](#什么是MCP？)
-* [教程](#教程)
-* [社区](#社区)
-* [说明](#说明)
-* [Server 实现](#服务器实现)
-* [框架](#框架)
-* [实用工具](#实用工具)
-* [客户端](#客户端)
-* [提示和技巧](#提示和技巧)
 
 ## 什么是MCP？
 
@@ -58,26 +48,6 @@ pubDate: 2025-03-18
 
 > [!NOTE]
 > 我们现在有一个与存储库同步的[基于 Web 的目录](https://glama.ai/mcp/servers)。
-
-* 📂 - [浏览器自动化](#browser-automation)
-* 🎨 - [艺术与文化](#art-and-culture)
-* ☁️ - [云平台](#cloud-platforms)
-* 🖥️ - [命令行](#command-line)
-* 💬 - [社交](#communication)
-* 👤 - [数据平台](#customer-data-platforms)
-* 🗄️ - [数据库](#databases)
-* 🛠️ - [开发者工具](#developer-tools)
-* 📂 - [文件系统](#file-systems)
-* 💰 - [Finance & Fintech](#finance--fintech)
-* 🧠 - [知识与记忆](#knowledge--memory)
-* 🗺️ - [位置服务](#location-services)
-* 🎯 - [营销](#marketing)
-* 📊 - [监测](#monitoring)
-* 🔎 - [搜索](#search)
-* 🔒 - [安全](#security)
-* 🚆 - [旅行与交通](#travel-and-transportation)
-* 🔄 - [版本控制](#version-control)
-* 🛠️ - [其他工具和集成](#other-tools-and-integrations)
 
 ### 📂 <a name="browser-automation"></a>浏览器自动化
 
