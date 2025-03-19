@@ -2,7 +2,7 @@
 title: 精选MCP服务器
 description: 精选的优秀模型上下文协议 (MCP) 服务器列表
 section: write_server
-prev: write_server
+prev: write-ts-server
 pubDate: 2025-03-18
 ---
 
