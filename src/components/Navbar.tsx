@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl'
 import { Link as I18nLink } from '@/i18n/routing'
-import Link from 'next/link'
 import LanguageSwitcher from './LanguageSwitcher'
 import ThemeToggle from './ThemeToggle'
 import { usePathname } from 'next/navigation'
