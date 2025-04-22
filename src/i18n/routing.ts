@@ -1,6 +1,6 @@
-import {createNavigation} from 'next-intl/navigation'
-import {defineRouting} from 'next-intl/routing'
-import {locales, defaultLocale} from '@/i18n/config'
+import { createNavigation } from 'next-intl/navigation'
+import { defineRouting } from 'next-intl/routing'
+import { locales, defaultLocale } from '@/i18n/config'
 
 export const routing = defineRouting({
   locales,
@@ -10,6 +10,8 @@ export const routing = defineRouting({
     '/docs': '/docs',
     '/docs/[slug]': '/docs/[slug]',
     '/blog': '/blog',
+    '/playground': '/playground',
+    '/inspector': '/inspector',
     '/specification': '/specification',
     '/community': '/community',
     '/servers': '/servers',
@@ -18,4 +20,4 @@ export const routing = defineRouting({
   localePrefix: 'as-needed'
 })
 
-export const {Link, redirect, usePathname, useRouter} = createNavigation(routing)
+export const { Link, redirect, usePathname, useRouter } = createNavigation(routing)
