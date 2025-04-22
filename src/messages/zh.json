@@ -786,5 +786,19 @@
         "configuration": "配置"
       }
     }
+  },
+  "Tools": {
+    "title": "Claude MCP 工具",
+    "description": "探索和测试我们的 MCP 开发和调试工具",
+    "playground": {
+      "title": "MCP 实验场",
+      "description": "在线对话试用各类 MCP Server"
+    },
+    "inspector": {
+      "title": "MCP Inspector",
+      "description": "使用 MCP 官方调试器在线测试的 MCP Server"
+    },
+    "openPlayground": "打开实验场",
+    "openInspector": "打开调试器"
   }
 }

@@ -771,5 +771,19 @@
         "configuration": "Configuration"
       }
     }
+  },
+  "Tools": {
+    "title": "Claude MCP Tools",
+    "description": "Explore and test our MCP tools for development and inspection",
+    "playground": {
+      "title": "MCP Playground",
+      "description": "Experiment with the comprehensive ModelScope MCP Server platform"
+    },
+    "inspector": {
+      "title": "MCP Inspector",
+      "description": "Use the official MCP debugging tool for online testing"
+    },
+    "openPlayground": "Open Playground",
+    "openInspector": "Open Inspector"
   }
 }
