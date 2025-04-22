@@ -22,7 +22,7 @@ export default function Navbar() {
     { href: '/playground' as const, label: t('playground') },
     { href: '/inspector' as const, label: t('inspector') },
     { href: '/specification' as const, label: t('specification') },
-    { href: 'https://programnotes.cn' as const, label: t('blog') },
+    // { href: 'https://programnotes.cn' as const, label: t('blog') },
   ]
   return (
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
@@ -50,6 +50,19 @@ export default function Navbar() {
                   {link.label}
                 </I18nLink>
               ))}
+              <Link
+                href="https://programnotes.cn"
+                aria-label={t('blog')}
+                title={t('blog')}
+                className={cn(
+                  "inline-flex items-center px-1 pt-1 text-sm font-medium",
+                  path.startsWith('/blog')
+                    ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
+                    : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                )}
+              >
+                {t('blog')}
+              </Link>
             </div>
           </div>
           <div className="flex items-center space-x-4">
