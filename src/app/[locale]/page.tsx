@@ -6,6 +6,7 @@ import { ProtocolSection } from '@/components/home/protocol-section';
 import { IntegrationSection } from '@/components/home/integration-section';
 import { GlobalSection } from '@/components/home/global-section';
 import { FeaturedServers } from '@/components/home/featured-servers';
+import { PlaygroundInspectorSection } from '@/components/home/playground-inspector-section';
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -47,6 +48,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col antialiased">
       <HeroSection />
+      <PlaygroundInspectorSection />
       <FeaturedServers />
       <OverviewSection />
       <ProtocolSection />

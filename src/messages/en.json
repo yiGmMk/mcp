@@ -1,10 +1,29 @@
 {
   "nav": {
     "servers": "Servers",
+    "clients": "Clients",
+    "playground": "Playground",
+    "inspector": "Inspector",
     "documentation": "Documentation",
     "blog": "Blog",
-    "specification": "Protocol Specification",
-    "community": "Community"
+    "specification": "Specification",
+    "community": "Community",
+    "getting_started": "Getting Started",
+    "guides": "Guides",
+    "advanced": "Advanced Topics",
+    "open_menu": "Open Menu",
+    "close_menu": "Close Menu",
+    "items": {
+      "introduction": "Introduction",
+      "installation": "Installation",
+      "quick_start": "Quick Start",
+      "resources": "Resources",
+      "tools": "Tools",
+      "messages": "Messages",
+      "security": "Security",
+      "deployment": "Deployment",
+      "configuration": "Configuration"
+    }
   },
   "home": {
     "title": "Global Tech Community",

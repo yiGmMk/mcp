@@ -1,6 +1,9 @@
 {
   "nav": {
-    "servers": "服务端",
+    "servers": "服务器",
+    "clients": "客户端",
+    "playground": "实验场",
+    "inspector": "调试器",
     "documentation": "文档",
     "blog": "博客",
     "specification": "协议规范",
@@ -8,6 +11,8 @@
     "getting_started": "入门指南",
     "guides": "使用指南",
     "advanced": "高级主题",
+    "open_menu": "打开菜单",
+    "close_menu": "关闭菜单",
     "items": {
       "introduction": "简介",
       "installation": "安装",

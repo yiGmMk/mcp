@@ -16,7 +16,15 @@ export default function Navbar() {
 
   // 从路径中移除语言前缀以获取实际路径
   const path = pathname.replace(`/${locale}`, '')
-
+  // 定义类型安全的导航链接
+  const navLinks = [
+    { href: '/servers' as const, label: t('servers') },
+    { href: '/docs' as const, label: t('documentation') },
+    { href: '/playground' as const, label: t('playground') },
+    { href: '/inspector' as const, label: t('inspector') },
+    { href: '/specification' as const, label: t('specification') },
+    { href: 'https://programnotes.cn' as const, label: t('blog') },
+  ]
   return (
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,58 +35,22 @@ export default function Navbar() {
               <span className="text-xl font-bold text-gray-900 dark:text-white">MCP</span>
             </I18nLink>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <I18nLink
-                href="/servers"
-                aria-label={t('servers')}
-                title={t('servers')}
-                className={cn(
-                  "inline-flex items-center px-1 pt-1 text-sm font-medium",
-                  path.startsWith('/servers')
-                    ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
-                    : "text-gray-900 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-400"
-                )}
-              >
-                {t('servers')}
-              </I18nLink>
-              <I18nLink
-                href="/docs"
-                aria-label={t('documentation')}
-                title={t('documentation')}
-                className={cn(
-                  "inline-flex items-center px-1 pt-1 text-sm font-medium",
-                  path.startsWith('/docs')
-                    ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
-                    : "text-gray-900 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-400"
-                )}
-              >
-                {t('documentation')}
-              </I18nLink>
-              <I18nLink
-                href="/specification"
-                aria-label={t('specification')}
-                title={t('specification')}
-                className={cn(
-                  "inline-flex items-center px-1 pt-1 text-sm font-medium",
-                  path.startsWith('/specification')
-                    ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
-                    : "text-gray-900 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-400"
-                )}
-              >
-                {t('specification')}
-              </I18nLink>
-              <Link
-                href="https://programnotes.cn"
-                aria-label={t('blog')}
-                title={t('blog')}
-                className={cn(
-                  "inline-flex items-center px-1 pt-1 text-sm font-medium",
-                  path.startsWith('/blog')
-                    ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
-                    : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                )}
-              >
-                {t('blog')}
-              </Link>
+              {navLinks.map((link) => (
+                <I18nLink
+                  key={link.href}
+                  href={link.href}
+                  aria-label={link.label}
+                  title={link.label}
+                  className={cn(
+                    "inline-flex items-center px-1 pt-1 text-sm font-medium",
+                    path.startsWith(link.href)
+                      ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
+                      : "text-gray-900 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-400"
+                  )}
+                >
+                  {link.label}
+                </I18nLink>
+              ))}
             </div>
           </div>
           <div className="flex items-center space-x-4">
