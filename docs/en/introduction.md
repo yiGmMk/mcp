@@ -4,6 +4,7 @@ description: Model Context Protocol Getting Started Guide
 section: getting_started
 next: architecture
 pubDate: 2024-12-01
+order: 1
 ---
 
 # MCP Introduction

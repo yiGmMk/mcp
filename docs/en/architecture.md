@@ -5,6 +5,7 @@ section: getting_started
 prev: introduction
 next: protocol
 pubDate: 2024-12-02
+order: 2
 ---
 
 # MCP Architecture
