@@ -5,6 +5,7 @@ section: getting_started
 prev: protocol
 next: write-ts-server
 pubDate: 2024-12-02
+order: 4
 ---
 
 # 快速入门

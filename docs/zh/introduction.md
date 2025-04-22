@@ -4,6 +4,7 @@ description: Model Context Protocol 中文入门指南
 section: getting_started
 next: architecture
 pubDate: 2024-12-01
+order: 1
 ---
 
 # Claude MCP 简介

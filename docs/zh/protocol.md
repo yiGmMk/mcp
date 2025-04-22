@@ -5,6 +5,7 @@ section: getting_started
 prev: architecture
 next: quickstart
 pubDate: 2024-12-02
+order: 3
 ---
 
 # MCP 基础协议
