@@ -12,7 +12,8 @@ tags:
   - search
   - api
 icon: https://cdn.simpleicons.org/brave
-createTime: 2024-12-01T00:00:00Z
+createTime: 2024-12-01
+featured: true
 ---
 
 An MCP server implementation that integrates the Brave Search API, providing both web and local search capabilities.
@@ -23,6 +24,8 @@ An MCP server implementation that integrates the Brave Search API, providing bot
 - **Local Search**: Find businesses, restaurants, and services with detailed information
 - **Flexible Filtering**: Control result types, safety levels, and content freshness
 - **Smart Fallbacks**: Local search automatically falls back to web when no results are found
+
+:::adsense 8781986491:::
 
 ## Tools
 
